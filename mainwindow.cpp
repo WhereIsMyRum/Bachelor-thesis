@@ -232,7 +232,7 @@ void MainWindow::updatePlot()
         freq += freqTab.at(4);
         //qDebug() << freq/5;
 
-    }adad
+    }ada
     else freqTab.append(freq);*/
 
     ui->customPlot->graph(0)->setData(x,y);
