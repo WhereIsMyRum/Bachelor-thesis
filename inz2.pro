@@ -26,13 +26,17 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
         main.cpp \
         mainwindow.cpp \
-    writetofile.cpp \
-    qcustomplot.cpp
+    qcustomplot.cpp \
+    filewriter.cpp \
+    serialportreader.cpp \
+    plotdatamaintainer.cpp
 
 HEADERS += \
         mainwindow.h \
-    writetofile.h \
-    qcustomplot.h
+    qcustomplot.h \
+    filewriter.h \
+    serialportreader.h \
+    plotdatamaintainer.h
 
 FORMS += \
         mainwindow.ui

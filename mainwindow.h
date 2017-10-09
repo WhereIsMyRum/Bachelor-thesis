@@ -5,16 +5,14 @@
 #include <QtSerialPort/QSerialPort>
 #include <QtSerialPort/QSerialPortInfo>
 #include <QThread>
-#include <QPlainTextEdit>
 #include <QList>
-#include <QString>
 #include <QException>
 #include <QDateTime>
-#include <QVector>
 #include <QSignalBlocker>
 
-#include "writetofile.h"
+#include "filewriter.h"
 #include "qcustomplot.h"
+#include "serialportreader.h"
 
 
 namespace Ui {
@@ -41,27 +39,29 @@ private slots:
     void readSerial();
     void makePlot();
     void updatePlot();
+    void shiftPlot(double);
 
 
 private:
     Ui::MainWindow *ui;
     quint16 arduino_leonardo_vendor_id;
     quint16 arduino_leonardo_product_id;
+
     QString arduino_leonardo_port_name;
-    QSerialPort *arduino;
-    QList<QString> devicesList;
     QString MyDataFileName;
     QString MyTimeFileName;
     QString dataBuffor;
     QString dataTimeBuffor;
+
     QStringList dataList;
-    QVector<double> x,y;
-    QSignalBlocker *blockSignal;
-    QString faultyData;
+
+    QSerialPort *arduino;
+
     //QVector<double> freqTab;
-    bool firstMeasurement;
-    bool faultyDataDetected;
-    double firstTimeRead;
+
+    FileWriter *fileWriterInstance;
+    SerialPortReader *serialPortReaderInstance;
+    PlotDataMaintainer *plotDataMaintainer;
 };
 
 #endif // MAINWINDOW_H

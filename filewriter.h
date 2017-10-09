@@ -1,5 +1,5 @@
-#ifndef WRITETOFILE_H
-#define WRITETOFILE_H
+#ifndef FILEWRITER_H
+#define FILEWRITER_H
 
 #include <QFile>
 #include <QString>
@@ -11,16 +11,16 @@
 #include <QDir>
 #include <QFileInfo>
 
-class WriteToFile
+class FileWriter
 {
 public:
-    WriteToFile();
+    FileWriter(QString);
 public slots:
-    static void Write(QString Filename, QString data);
-    static QString MakeNewFile();
+    void WriteToFile(QString fileName, QString data);
+    QString MakeNewFile();
 public:
-    static QString dir;
+    QString pathToSaveDirectory;
 
 };
 
-#endif // WRITETOFILE_H
+#endif // FILEWRITER_H

@@ -9,10 +9,12 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
 
     arduino = new QSerialPort(this);
+    fileWriterInstance = new FileWriter("C:/QtProjects/inz2/Measurements/");
+    serialPortReaderInstance = new SerialPortReader();
+    plotDataMaintainer = new PlotDataMaintainer();
+
     this->setFixedSize(850,450);
     MainWindow::makePlot();
-    firstMeasurement = true;
-    faultyDataDetected = false;
 
 }
 
@@ -41,13 +43,11 @@ void MainWindow::on_findDevicesButton_clicked()
             for(int i = 0; i < ui->devicesListWidget->count(); i++)                                     //sprawdz, czy dane urzadzenie nie znajduje sie juz na liscie
             {
                 QString item = ui->devicesListWidget->item(i)->text();
-
                 if(item == serialPortInfo.manufacturer()) itemNotOnList = false;
             }
             if(itemNotOnList)                                                                           //jesli sie nie znajduje, umiesc je.
             {
                  ui->devicesListWidget->addItem(serialPortInfo.manufacturer());
-                 devicesList.append(serialPortInfo.manufacturer());
             }
         }
         ui->connectDeviceButton->setEnabled(true);
@@ -91,14 +91,15 @@ void MainWindow::on_startMeasurementButton_clicked()
 {
     arduino->clear();
 
-    MyDataFileName = WriteToFile::MakeNewFile();                                                           //pobierz nazwe pliku do zapisu z funkcji MakeNewFile()
+    MyDataFileName = fileWriterInstance->MakeNewFile();                                                           //pobierz nazwe pliku do zapisu z funkcji MakeNewFile()
     MyTimeFileName = MyDataFileName;
     MyTimeFileName.replace(".txt","_time.txt");
 
     QDateTime dateAndTime;                                                                             //wstaw date i czas w pierwszej linii pomiaru
-    WriteToFile::Write(MyDataFileName,dateAndTime.currentDateTime().toString());
+    fileWriterInstance->WriteToFile(MyDataFileName,dateAndTime.currentDateTime().toString());
 
     QObject::connect(arduino,SIGNAL(readyRead()),this,SLOT(readSerial()));                             //polacz sygnal z portu ze slotem do odczytu z portu
+    QObject::connect(serialPortReaderInstance,SIGNAL(plotRangeExceeded(double)),this,SLOT(shiftPlot(double)));
 
     ui->stopMeasurementButton->setEnabled(true);
     ui->startMeasurementButton->setEnabled(false);
@@ -119,17 +120,17 @@ void MainWindow::on_stopMeasurementButton_clicked()
     ui->stopMeasurementButton->setEnabled(false);
     ui->disconnectDeviceButton->setEnabled(true);
 
-    WriteToFile::Write(MyDataFileName,dataBuffor);
-    WriteToFile::Write(MyTimeFileName,dataTimeBuffor);
+    fileWriterInstance->WriteToFile(MyDataFileName,dataBuffor);
+    fileWriterInstance->WriteToFile(MyTimeFileName,dataTimeBuffor);
 
     MainWindow::makePlot();
 
-    firstMeasurement = true;
-    faultyDataDetected = false;
+    serialPortReaderInstance->setFirstMeasurement(true);
+    serialPortReaderInstance->setFaultyDataDetected(false);
     dataBuffor.clear();
     dataTimeBuffor.clear();
-    x.clear();
-    y.clear();
+    plotDataMaintainer->x.clear();
+    plotDataMaintainer->y.clear();
     statusBar()->showMessage("Measurement terminated.",2000);
 
 }
@@ -144,65 +145,8 @@ void MainWindow::on_exitButton_clicked()
 //Funkcja odpowiadająca za odczyt danych z portu szeregowego
 void MainWindow::readSerial()
 {
-    QByteArray serialData = arduino->readAll();
-    QString *temp1 = new QString(QString::fromStdString(serialData.toStdString()));
-    QRegExp *rx1 = new QRegExp("\\d{1,3}\\.[0-9]{2}");
-    QRegExp *rx2 = new QRegExp("\\d{1,20}s");
-    QStringList dataListToAppend = temp1->split("\r\n");
-    while(dataListToAppend.contains("")) dataListToAppend.removeAt(dataListToAppend.indexOf(""));
+    serialPortReaderInstance->ReadSerial(dataBuffor, dataTimeBuffor, arduino->readAll(), plotDataMaintainer);
 
-    if(faultyDataDetected)
-    {
-        faultyData.append(dataListToAppend.first());
-        dataListToAppend.removeFirst();
-
-        if(faultyData.contains("\r\n"))
-        {
-            QStringList *tempList = new QStringList(faultyData.split("\r\n"));
-            dataListToAppend.insert(0, tempList->at(1));
-            dataListToAppend.insert(0, tempList->at(0));
-        }
-        else dataListToAppend.insert(0, faultyData);
-
-        faultyDataDetected = false;
-    }
-
-    if(!dataListToAppend.isEmpty() && !rx1->exactMatch(dataListToAppend.last()) && !rx2->exactMatch(dataListToAppend.last()))
-    {
-        faultyDataDetected = true;
-        faultyData = dataListToAppend.last();
-        dataListToAppend.removeLast();
-    }
-
-    while(dataListToAppend.length() > 0 && !dataListToAppend.isEmpty())
-    {
-        if(firstMeasurement && dataListToAppend.first().contains("s"))
-        {
-            QString temp = dataListToAppend.first();
-            firstTimeRead = (temp.remove("s").toDouble())/1000; firstMeasurement = false;
-        }
-        if(rx2->exactMatch(dataListToAppend.first()))
-        {
-            x.append(((dataListToAppend.first().remove('s').toDouble())/1000-firstTimeRead));
-            dataTimeBuffor.append(QString::number(x.last()));
-            dataTimeBuffor.append("\r\n");
-            dataListToAppend.removeFirst();
-
-            if(x.constLast()>4500)
-            {
-                ui->customPlot->xAxis->moveRange(x.value(x.length()-1)-x.value(x.length()-2));
-                x.removeFirst();
-                y.removeFirst();
-            }
-        }
-        else if(rx1->exactMatch(dataListToAppend.first()))
-        {
-            dataBuffor.append(dataListToAppend.first());
-            dataBuffor.append("\r\n");
-            y.append(dataListToAppend.first().toDouble());
-            dataListToAppend.removeFirst();
-        }
-    }
     MainWindow::updatePlot();
 }
 
@@ -235,7 +179,7 @@ void MainWindow::updatePlot()
     }ada
     else freqTab.append(freq);*/
 
-    ui->customPlot->graph(0)->setData(x,y);
+    ui->customPlot->graph(0)->setData(plotDataMaintainer->x,plotDataMaintainer->y);
     ui->customPlot->replot();
     ui->customPlot->update();
 }
@@ -249,4 +193,9 @@ void MainWindow::on_disconnectDeviceButton_clicked()
     ui->disconnectDeviceButton->setEnabled(false);
 
     statusBar()->showMessage("Device disconnected.", 2000);
+}
+
+void MainWindow::shiftPlot(double valueToBeShifted)
+{
+    ui->customPlot->xAxis->moveRange(valueToBeShifted);
 }

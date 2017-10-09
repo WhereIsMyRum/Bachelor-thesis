@@ -1,17 +1,20 @@
-#include "writetofile.h"
+#include "filewriter.h"
 
-QString WriteToFile::dir;
-
-QString WriteToFile::MakeNewFile()
+FileWriter::FileWriter(QString usersPath)
 {
-    dir = "C:/QtProjects/inz2/Measurements/";
+    pathToSaveDirectory = usersPath;
+}
+
+QString FileWriter::MakeNewFile()
+{
+    pathToSaveDirectory = "C:/QtProjects/inz2/Measurements/";
     QStringList txtFilesList;
     QString newFileName = "test1.txt";
-    int i = 2;
+    int newFileNumber = 2;
     bool fileExists = true;
 
-    QDirIterator it(dir, QStringList() << "*.txt", QDir::Files, QDirIterator::Subdirectories);      //tworzenie listy plikow *.txt w folderze
-    while(it.hasNext()) txtFilesList.append(it.next().remove(dir));                                 //
+    QDirIterator it(pathToSaveDirectory, QStringList() << "*.txt", QDir::Files, QDirIterator::Subdirectories);      //tworzenie listy plikow *.txt w folderze
+    while(it.hasNext()) txtFilesList.append(it.next().remove(pathToSaveDirectory));                                 //
 
 
     while(fileExists)                                                                               //sprawdz czy plik o nazwie test(i).txt istnieje
@@ -20,19 +23,19 @@ QString WriteToFile::MakeNewFile()
         if(fileExists)
         {
             newFileName = "test";
-            newFileName.append(QString("%1").arg(i));
+            newFileName.append(QString("%1").arg(newFileNumber));
             newFileName.append(".txt");
-            i++;
+            newFileNumber++;
         }
     }
-    dir.append(newFileName);                                                                        //Dodaj nazwe pliku do absolute patha
+    pathToSaveDirectory.append(newFileName);                                                                        //Dodaj nazwe pliku do absolute patha
 
-    return dir;
+    return pathToSaveDirectory;
 }
 
-void WriteToFile::Write(const QString Filename, const QString data)
+void FileWriter::WriteToFile(const QString fileName, const QString data)
 {
-    QFile mFile(Filename);
+    QFile mFile(fileName);
 
     if(!mFile.open(QIODevice::WriteOnly | QIODevice::Append))                                       //Sprawdz czy mozna otworzyc plik do zapisu
     {
