@@ -4,7 +4,7 @@ SerialPortReader::SerialPortReader()
 {
     dataRegExp = new QRegExp("\\d{1,3}\\.\\d{2}");
     timeRegExp = new QRegExp("\\d{1,20}s");
-    firstMeasurement = true;l
+    firstMeasurement = true;
     faultyDataDetected = false;
 }
 
