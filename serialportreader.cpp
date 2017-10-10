@@ -8,7 +8,7 @@ SerialPortReader::SerialPortReader()
     faultyDataDetected = false;
 }
 
-void SerialPortReader::ReadSerial(QString& dataBuffor, QString& dataTimeBuffor, QByteArray serialData, PlotDataMaintainer* plotDataMaintainer)
+void SerialPortReader::ReadSerial(QByteArray serialData, PlotDataMaintainer* plotDataMaintainer)
 {
     serialDataString = new QString(QString::fromStdString(serialData.toStdString()));
     QStringList dataListToAppend = serialDataString->split("\r\n");
@@ -77,4 +77,24 @@ void SerialPortReader::setFirstMeasurement(bool value)
 void SerialPortReader::setFaultyDataDetected(bool value)
 {
     faultyDataDetected = value;
+}
+
+QString SerialPortReader::getDataBuffor() const
+{
+    return dataBuffor;
+}
+
+void SerialPortReader::clearDataBuffor()
+{
+    dataBuffor.clear();
+}
+
+QString SerialPortReader::getDataTimeBuffor() const
+{
+    return dataTimeBuffor;
+}
+
+void SerialPortReader::clearDataTimeBuffor()
+{
+    dataTimeBuffor.clear();
 }

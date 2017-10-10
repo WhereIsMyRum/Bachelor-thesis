@@ -16,14 +16,23 @@ class SerialPortReader : public QObject
 
 public:
     SerialPortReader();
-    void ReadSerial(QString& dataBuffor, QString& dataTimeBuffor, QByteArray serialData, PlotDataMaintainer* plotDataMaintainer);
+    void ReadSerial(QByteArray serialData, PlotDataMaintainer* plotDataMaintainer);
 
     void setFirstMeasurement(bool value);
     void setFaultyDataDetected(bool value);
 
+    QString getDataBuffor() const;
+    void clearDataBuffor();
+
+    QString getDataTimeBuffor() const;
+    void clearDataTimeBuffor();
+
 private:
     QString *serialDataString;
     QString faultyData;
+    QString dataBuffor;
+    QString dataTimeBuffor;
+
     QStringList *dataListToAppend;
 
     bool firstMeasurement;

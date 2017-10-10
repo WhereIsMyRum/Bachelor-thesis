@@ -44,14 +44,10 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
-    quint16 arduino_leonardo_vendor_id;
-    quint16 arduino_leonardo_product_id;
 
-    QString arduino_leonardo_port_name;
-    QString MyDataFileName;
-    QString MyTimeFileName;
-    QString dataBuffor;
-    QString dataTimeBuffor;
+    QString arduinoLeonardoPortName;
+    QString myDataFileName;
+    QString myTimeFileName;
 
     QStringList dataList;
 

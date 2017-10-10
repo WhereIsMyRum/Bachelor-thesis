@@ -63,8 +63,8 @@ void MainWindow::on_connectDeviceButton_clicked()
         {
             if(serialPortInfo.manufacturer() == ui->devicesListWidget->currentItem()->text())          //Znajdz wsrod podlaczonych urzadzen to, które zostało zaznaczone
             {                                                                                          //na deviceListWidget przez uzytkownika
-                arduino_leonardo_port_name = serialPortInfo.portName();
-                arduino->setPortName(arduino_leonardo_port_name);
+                arduinoLeonardoPortName = serialPortInfo.portName();
+                arduino->setPortName(arduinoLeonardoPortName);
                 arduino->open(QSerialPort::ReadOnly);
                 arduino->setBaudRate(QSerialPort::Baud38400);
                 arduino->setDataBits(QSerialPort::Data8);
@@ -91,12 +91,12 @@ void MainWindow::on_startMeasurementButton_clicked()
 {
     arduino->clear();
 
-    MyDataFileName = fileWriterInstance->MakeNewFile();                                                           //pobierz nazwe pliku do zapisu z funkcji MakeNewFile()
-    MyTimeFileName = MyDataFileName;
-    MyTimeFileName.replace(".txt","_time.txt");
+    myDataFileName = fileWriterInstance->MakeNewFile();                                                           //pobierz nazwe pliku do zapisu z funkcji MakeNewFile()
+    myTimeFileName = myDataFileName;
+    myTimeFileName.replace(".txt","_time.txt");
 
     QDateTime dateAndTime;                                                                             //wstaw date i czas w pierwszej linii pomiaru
-    fileWriterInstance->WriteToFile(MyDataFileName,dateAndTime.currentDateTime().toString());
+    fileWriterInstance->WriteToFile(myDataFileName,dateAndTime.currentDateTime().toString());
 
     QObject::connect(arduino,SIGNAL(readyRead()),this,SLOT(readSerial()));                             //polacz sygnal z portu ze slotem do odczytu z portu
     QObject::connect(serialPortReaderInstance,SIGNAL(plotRangeExceeded(double)),this,SLOT(shiftPlot(double)));
@@ -120,15 +120,15 @@ void MainWindow::on_stopMeasurementButton_clicked()
     ui->stopMeasurementButton->setEnabled(false);
     ui->disconnectDeviceButton->setEnabled(true);
 
-    fileWriterInstance->WriteToFile(MyDataFileName,dataBuffor);
-    fileWriterInstance->WriteToFile(MyTimeFileName,dataTimeBuffor);
+    fileWriterInstance->WriteToFile(myDataFileName,serialPortReaderInstance->getDataBuffor());
+    fileWriterInstance->WriteToFile(myTimeFileName,serialPortReaderInstance->getDataTimeBuffor());
 
     MainWindow::makePlot();
 
     serialPortReaderInstance->setFirstMeasurement(true);
     serialPortReaderInstance->setFaultyDataDetected(false);
-    dataBuffor.clear();
-    dataTimeBuffor.clear();
+    serialPortReaderInstance->clearDataBuffor();
+    serialPortReaderInstance->clearDataTimeBuffor();
     plotDataMaintainer->x.clear();
     plotDataMaintainer->y.clear();
     statusBar()->showMessage("Measurement terminated.",2000);
@@ -145,7 +145,7 @@ void MainWindow::on_exitButton_clicked()
 //Funkcja odpowiadająca za odczyt danych z portu szeregowego
 void MainWindow::readSerial()
 {
-    serialPortReaderInstance->ReadSerial(dataBuffor, dataTimeBuffor, arduino->readAll(), plotDataMaintainer);
+    serialPortReaderInstance->ReadSerial(arduino->readAll(), plotDataMaintainer);
 
     MainWindow::updatePlot();
 }
