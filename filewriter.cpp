@@ -7,7 +7,6 @@ FileWriter::FileWriter(QString usersPath)
 
 QString FileWriter::MakeNewFile()
 {
-    pathToSaveDirectory = "C:/QtProjects/inz2/Measurements/";
     QStringList txtFilesList;
     QString newFileName = "test1.txt";
     int newFileNumber = 2;

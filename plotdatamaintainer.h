@@ -8,7 +8,9 @@ class PlotDataMaintainer
 {
 public:
     PlotDataMaintainer();
-    QVector<double> x,y;
+    QVector<double> x_sig;
+    QVector<double> y_sig;
+    QVector<double> y_raw;
 
 };
 

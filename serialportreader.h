@@ -27,10 +27,16 @@ public:
     QString getDataTimeBuffor() const;
     void clearDataTimeBuffor();
 
+    QString getRawDataBuffor() const;
+    void clearRawDataBuffor();
+
+    int numberOfCalls; //usun
+
 private:
     QString *serialDataString;
     QString faultyData;
     QString dataBuffor;
+    QString rawDataBuffor;
     QString dataTimeBuffor;
 
     QStringList *dataListToAppend;
@@ -41,6 +47,7 @@ private:
 
     QRegExp *dataRegExp;
     QRegExp *timeRegExp;
+    QRegExp *dataRawRegExp;
 
 signals:
     void plotRangeExceeded(double);

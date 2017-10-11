@@ -9,11 +9,11 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
 
     arduino = new QSerialPort(this);
-    fileWriterInstance = new FileWriter("C:/QtProjects/inz2/Measurements/");
+    fileWriterInstance = new FileWriter("C:/QtProjects/Inzynierka/Measurements/");
     serialPortReaderInstance = new SerialPortReader();
     plotDataMaintainer = new PlotDataMaintainer();
 
-    this->setFixedSize(850,450);
+    //this->setFixedSize(850,450);
     MainWindow::makePlot();
 
 }
@@ -92,6 +92,8 @@ void MainWindow::on_startMeasurementButton_clicked()
     arduino->clear();
 
     myDataFileName = fileWriterInstance->MakeNewFile();                                                           //pobierz nazwe pliku do zapisu z funkcji MakeNewFile()
+    myRawDataFileName = fileWriterInstance->MakeNewFile();
+    myRawDataFileName.replace(".txt","_raw.txt");
     myTimeFileName = myDataFileName;
     myTimeFileName.replace(".txt","_time.txt");
 
@@ -121,6 +123,7 @@ void MainWindow::on_stopMeasurementButton_clicked()
     ui->disconnectDeviceButton->setEnabled(true);
 
     fileWriterInstance->WriteToFile(myDataFileName,serialPortReaderInstance->getDataBuffor());
+    fileWriterInstance->WriteToFile(myRawDataFileName, serialPortReaderInstance->getRawDataBuffor());
     fileWriterInstance->WriteToFile(myTimeFileName,serialPortReaderInstance->getDataTimeBuffor());
 
     MainWindow::makePlot();
@@ -128,10 +131,16 @@ void MainWindow::on_stopMeasurementButton_clicked()
     serialPortReaderInstance->setFirstMeasurement(true);
     serialPortReaderInstance->setFaultyDataDetected(false);
     serialPortReaderInstance->clearDataBuffor();
+    serialPortReaderInstance->clearRawDataBuffor();
     serialPortReaderInstance->clearDataTimeBuffor();
-    plotDataMaintainer->x.clear();
-    plotDataMaintainer->y.clear();
+
+    plotDataMaintainer->x_sig.clear();
+    plotDataMaintainer->y_sig.clear();
+    plotDataMaintainer->y_raw.clear();
     statusBar()->showMessage("Measurement terminated.",2000);
+
+    qDebug() << serialPortReaderInstance->numberOfCalls; //usun
+    serialPortReaderInstance->numberOfCalls = 0;
 
 }
 
@@ -153,6 +162,11 @@ void MainWindow::readSerial()
 void MainWindow::makePlot()
 {
     ui->customPlot->addGraph();
+    ui->customPlot->graph(0)->setPen(QPen(Qt::blue));
+
+    ui->customPlot->addGraph();
+    ui->customPlot->graph(1)->setPen(QPen(Qt::red));
+
     ui->customPlot->xAxis->setLabel("t[s]");
     ui->customPlot->yAxis->setLabel("U[mV]");
     ui->customPlot->xAxis->setRange(0,5000);
@@ -179,7 +193,8 @@ void MainWindow::updatePlot()
     }ada
     else freqTab.append(freq);*/
 
-    ui->customPlot->graph(0)->setData(plotDataMaintainer->x,plotDataMaintainer->y);
+    ui->customPlot->graph(0)->setData(plotDataMaintainer->x_sig,plotDataMaintainer->y_sig);
+    ui->customPlot->graph(1)->setData(plotDataMaintainer->x_sig,plotDataMaintainer->y_raw);
     ui->customPlot->replot();
     ui->customPlot->update();
 }

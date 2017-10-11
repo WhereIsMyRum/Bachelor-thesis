@@ -47,6 +47,7 @@ private:
 
     QString arduinoLeonardoPortName;
     QString myDataFileName;
+    QString myRawDataFileName;
     QString myTimeFileName;
 
     QStringList dataList;
