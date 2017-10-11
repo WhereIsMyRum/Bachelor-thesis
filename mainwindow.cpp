@@ -12,6 +12,9 @@ MainWindow::MainWindow(QWidget *parent) :
     fileWriterInstance = new FileWriter("C:/QtProjects/Inzynierka/Measurements/");
     serialPortReaderInstance = new SerialPortReader();
     plotDataMaintainer = new PlotDataMaintainer();
+    plotter = new Plotter(this);
+    plotter->setWindowFlag(Qt::Window);
+    plotter->setVisible(false);
 
     //this->setFixedSize(850,450);
     MainWindow::makePlot();
@@ -93,7 +96,7 @@ void MainWindow::on_startMeasurementButton_clicked()
 
     myDataFileName = fileWriterInstance->MakeNewFile();                                                           //pobierz nazwe pliku do zapisu z funkcji MakeNewFile()
     myRawDataFileName = fileWriterInstance->MakeNewFile();
-    myRawDataFileName.replace(".txt","_raw.txt");
+    myRawDataFileName.replace(".txttest1.txt","_raw.txt");
     myTimeFileName = myDataFileName;
     myTimeFileName.replace(".txt","_time.txt");
 
@@ -102,11 +105,15 @@ void MainWindow::on_startMeasurementButton_clicked()
 
     QObject::connect(arduino,SIGNAL(readyRead()),this,SLOT(readSerial()));                             //polacz sygnal z portu ze slotem do odczytu z portu
     QObject::connect(serialPortReaderInstance,SIGNAL(plotRangeExceeded(double)),this,SLOT(shiftPlot(double)));
+    QObject::connect(plotter,SIGNAL(stopMeasurement()),this,SLOT(on_stopMeasurementButton_clicked()));
 
     ui->stopMeasurementButton->setEnabled(true);
     ui->startMeasurementButton->setEnabled(false);
     ui->exitButton->setEnabled(false);
     ui->disconnectDeviceButton->setEnabled(false);
+
+    plotter->setVisible(true);
+    plotter->showMaximized();
 
     statusBar()->showMessage("Measurement in progress...");
 
@@ -134,13 +141,12 @@ void MainWindow::on_stopMeasurementButton_clicked()
     serialPortReaderInstance->clearRawDataBuffor();
     serialPortReaderInstance->clearDataTimeBuffor();
 
+    plotter->setVisible(false);
+
     plotDataMaintainer->x_sig.clear();
     plotDataMaintainer->y_sig.clear();
     plotDataMaintainer->y_raw.clear();
     statusBar()->showMessage("Measurement terminated.",2000);
-
-    qDebug() << serialPortReaderInstance->numberOfCalls; //usun
-    serialPortReaderInstance->numberOfCalls = 0;
 
 }
 
@@ -154,9 +160,10 @@ void MainWindow::on_exitButton_clicked()
 //Funkcja odpowiadająca za odczyt danych z portu szeregowego
 void MainWindow::readSerial()
 {
-    serialPortReaderInstance->ReadSerial(arduino->readAll(), plotDataMaintainer);
+    serialPortReaderInstance->ReadSerial(arduino->readAll(), plotDataMaintainer, plotter);
 
     MainWindow::updatePlot();
+    plotter->updatePlot();
 }
 
 void MainWindow::makePlot()
@@ -213,4 +220,5 @@ void MainWindow::on_disconnectDeviceButton_clicked()
 void MainWindow::shiftPlot(double valueToBeShifted)
 {
     ui->customPlot->xAxis->moveRange(valueToBeShifted);
+    emit shiftSecondPlot(valueToBeShifted);
 }

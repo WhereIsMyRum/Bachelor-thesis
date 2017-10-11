@@ -9,10 +9,9 @@ SerialPortReader::SerialPortReader()
     timeRegExp = new QRegExp("\\d{1,20}t");
     firstMeasurement = true;
     faultyDataDetected = false;
-    numberOfCalls = 0;
 }
 
-void SerialPortReader::ReadSerial(QByteArray serialData, PlotDataMaintainer* plotDataMaintainer)
+void SerialPortReader::ReadSerial(QByteArray serialData, PlotDataMaintainer* plotDataMaintainer, Plotter *plotter)
 {
     serialDataString = new QString(QString::fromStdString(serialData.toStdString()));
     QStringList dataListToAppend = serialDataString->split("\r\n");
@@ -51,18 +50,20 @@ void SerialPortReader::ReadSerial(QByteArray serialData, PlotDataMaintainer* plo
         if(timeRegExp->exactMatch(dataListToAppend.first()))
         {
             plotDataMaintainer->x_sig.append(((dataListToAppend.first().remove('t').toDouble())/1000-firstTimeRead));
+            plotter->x.append(((dataListToAppend.first().remove('t').toDouble())/1000-firstTimeRead));
             dataTimeBuffor.append(QString::number(plotDataMaintainer->x_sig.last()));
             dataTimeBuffor.append("\r\n");
             dataListToAppend.removeFirst();
 
             if(plotDataMaintainer->x_sig.constLast()>4500)
             {
-
-                numberOfCalls++; //usun
                 plotDataMaintainer->x_sig.removeFirst();
+                plotter->x.removeFirst();
+                plotter->y.removeFirst();
                 if(!plotDataMaintainer->y_sig.empty()) plotDataMaintainer->y_sig.removeFirst();
                 if(!plotDataMaintainer->y_raw.empty()) plotDataMaintainer->y_raw.removeFirst();
                 emit plotRangeExceeded(plotDataMaintainer->x_sig.value(plotDataMaintainer->x_sig.length()-1)-plotDataMaintainer->x_sig.value(plotDataMaintainer->x_sig.length()-2));
+                //emit plotRangeExceeded(plotter->x.value(plotter->x.length()-1)-plotter->x.value(plotter->x.length()-2));
                 //ui->customPlot->xAxis->moveRange(x.value(x.length()-1)-x.value(x.length()-2));
             }
         }
@@ -71,6 +72,7 @@ void SerialPortReader::ReadSerial(QByteArray serialData, PlotDataMaintainer* plo
             dataBuffor.append(dataListToAppend.first());
             dataBuffor.append("\r\n");
             plotDataMaintainer->y_sig.append(dataListToAppend.first().toDouble());
+            plotter->y.append(dataListToAppend.first().toDouble());
             dataListToAppend.removeFirst();
         }
         else if(dataRawRegExp->exactMatch(dataListToAppend.first()))

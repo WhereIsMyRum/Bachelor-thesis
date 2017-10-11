@@ -29,16 +29,19 @@ SOURCES += \
     qcustomplot.cpp \
     filewriter.cpp \
     serialportreader.cpp \
-    plotdatamaintainer.cpp
+    plotdatamaintainer.cpp \
+    plotter.cpp
 
 HEADERS += \
         mainwindow.h \
     qcustomplot.h \
     filewriter.h \
     serialportreader.h \
-    plotdatamaintainer.h
+    plotdatamaintainer.h \
+    plotter.h
 
 FORMS += \
-        mainwindow.ui
+        mainwindow.ui \
+    plotter.ui
 
 INCLUDEPATH += C:\QtProjects\inz2\dlib-19.7

@@ -13,7 +13,7 @@
 #include "filewriter.h"
 #include "qcustomplot.h"
 #include "serialportreader.h"
-
+#include "plotter.h"
 
 namespace Ui {
 class MainWindow;
@@ -59,6 +59,10 @@ private:
     FileWriter *fileWriterInstance;
     SerialPortReader *serialPortReaderInstance;
     PlotDataMaintainer *plotDataMaintainer;
+    Plotter *plotter;
+
+signals:
+    void shiftSecondPlot(double);
 };
 
 #endif // MAINWINDOW_H

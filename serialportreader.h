@@ -8,6 +8,7 @@
 #include <QDebug>
 #include <QObject>
 #include "plotdatamaintainer.h"
+#include "plotter.h"
 
 class SerialPortReader : public QObject
 {
@@ -16,7 +17,7 @@ class SerialPortReader : public QObject
 
 public:
     SerialPortReader();
-    void ReadSerial(QByteArray serialData, PlotDataMaintainer* plotDataMaintainer);
+    void ReadSerial(QByteArray serialData, PlotDataMaintainer* plotDataMaintainer, Plotter *plotter);
 
     void setFirstMeasurement(bool value);
     void setFaultyDataDetected(bool value);
@@ -29,8 +30,6 @@ public:
 
     QString getRawDataBuffor() const;
     void clearRawDataBuffor();
-
-    int numberOfCalls; //usun
 
 private:
     QString *serialDataString;
