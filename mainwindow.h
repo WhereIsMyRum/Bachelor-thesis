@@ -37,8 +37,6 @@ private slots:
     void on_disconnectDeviceButton_clicked();
 
     void readSerial();
-    void makePlot();
-    void updatePlot();
     void shiftPlot(double);
 
 
@@ -56,9 +54,10 @@ private:
 
     //QVector<double> freqTab;
 
+    QByteArray dataBytes;
+
     FileWriter *fileWriterInstance;
     SerialPortReader *serialPortReaderInstance;
-    PlotDataMaintainer *plotDataMaintainer;
     Plotter *plotter;
 
 signals:

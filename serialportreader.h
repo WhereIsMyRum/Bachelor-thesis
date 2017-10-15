@@ -17,7 +17,7 @@ class SerialPortReader : public QObject
 
 public:
     SerialPortReader();
-    void ReadSerial(QByteArray serialData, PlotDataMaintainer* plotDataMaintainer, Plotter *plotter);
+    void ReadSerial(QByteArray serialData, Plotter *plotter);
 
     void setFirstMeasurement(bool value);
     void setFaultyDataDetected(bool value);

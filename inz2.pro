@@ -26,22 +26,20 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
         main.cpp \
         mainwindow.cpp \
-    qcustomplot.cpp \
-    filewriter.cpp \
-    serialportreader.cpp \
-    plotdatamaintainer.cpp \
-    plotter.cpp
+        qcustomplot.cpp \
+        filewriter.cpp \
+        serialportreader.cpp \
+        plotter.cpp
 
 HEADERS += \
         mainwindow.h \
-    qcustomplot.h \
-    filewriter.h \
-    serialportreader.h \
-    plotdatamaintainer.h \
-    plotter.h
+        qcustomplot.h \
+        filewriter.h \
+        serialportreader.h \
+        plotter.h
 
 FORMS += \
         mainwindow.ui \
-    plotter.ui
+        plotter.ui
 
 INCLUDEPATH += C:\QtProjects\inz2\dlib-19.7

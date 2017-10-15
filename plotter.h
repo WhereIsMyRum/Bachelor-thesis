@@ -18,7 +18,7 @@ public:
     void makePlot();
     void updatePlot();
 
-    QVector<double> x,y;
+    QVector<double> x,y_sig,y_raw;
 
 private slots:
     void on_stopMeasurementButton_clicked();

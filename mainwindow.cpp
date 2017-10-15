@@ -11,13 +11,11 @@ MainWindow::MainWindow(QWidget *parent) :
     arduino = new QSerialPort(this);
     fileWriterInstance = new FileWriter("C:/QtProjects/Inzynierka/Measurements/");
     serialPortReaderInstance = new SerialPortReader();
-    plotDataMaintainer = new PlotDataMaintainer();
     plotter = new Plotter(this);
     plotter->setWindowFlag(Qt::Window);
     plotter->setVisible(false);
 
     //this->setFixedSize(850,450);
-    MainWindow::makePlot();
 
 }
 
@@ -69,7 +67,7 @@ void MainWindow::on_connectDeviceButton_clicked()
                 arduinoLeonardoPortName = serialPortInfo.portName();
                 arduino->setPortName(arduinoLeonardoPortName);
                 arduino->open(QSerialPort::ReadOnly);
-                arduino->setBaudRate(QSerialPort::Baud38400);
+                arduino->setBaudRate(QSerialPort::Baud115200);
                 arduino->setDataBits(QSerialPort::Data8);
                 arduino->setFlowControl(QSerialPort::NoFlowControl);
                 arduino->setParity(QSerialPort::NoParity);
@@ -95,13 +93,17 @@ void MainWindow::on_startMeasurementButton_clicked()
     arduino->clear();
 
     myDataFileName = fileWriterInstance->MakeNewFile();                                                           //pobierz nazwe pliku do zapisu z funkcji MakeNewFile()
-    myRawDataFileName = fileWriterInstance->MakeNewFile();
-    myRawDataFileName.replace(".txttest1.txt","_raw.txt");
+    myRawDataFileName = myDataFileName;
+    myRawDataFileName.replace(".txt","_raw.txt");
     myTimeFileName = myDataFileName;
     myTimeFileName.replace(".txt","_time.txt");
 
     QDateTime dateAndTime;                                                                             //wstaw date i czas w pierwszej linii pomiaru
     fileWriterInstance->WriteToFile(myDataFileName,dateAndTime.currentDateTime().toString());
+
+    plotter->makePlot();
+    plotter->setVisible(true);
+    plotter->showMaximized();
 
     QObject::connect(arduino,SIGNAL(readyRead()),this,SLOT(readSerial()));                             //polacz sygnal z portu ze slotem do odczytu z portu
     QObject::connect(serialPortReaderInstance,SIGNAL(plotRangeExceeded(double)),this,SLOT(shiftPlot(double)));
@@ -112,9 +114,6 @@ void MainWindow::on_startMeasurementButton_clicked()
     ui->exitButton->setEnabled(false);
     ui->disconnectDeviceButton->setEnabled(false);
 
-    plotter->setVisible(true);
-    plotter->showMaximized();
-
     statusBar()->showMessage("Measurement in progress...");
 
 }
@@ -123,6 +122,8 @@ void MainWindow::on_startMeasurementButton_clicked()
 void MainWindow::on_stopMeasurementButton_clicked()
 {
     QObject::disconnect(arduino,SIGNAL(readyRead()),this,SLOT(readSerial()));                         //rozlacz port ze slotem do odczytu z portu
+    QObject::disconnect(serialPortReaderInstance,SIGNAL(plotRangeExceeded(double)),this,SLOT(shiftPlot(double)));
+    QObject::disconnect(plotter,SIGNAL(stopMeasurement()),this,SLOT(on_stopMeasurementButton_clicked()));
 
     ui->startMeasurementButton->setEnabled(true);
     ui->exitButton->setEnabled(true);
@@ -133,8 +134,6 @@ void MainWindow::on_stopMeasurementButton_clicked()
     fileWriterInstance->WriteToFile(myRawDataFileName, serialPortReaderInstance->getRawDataBuffor());
     fileWriterInstance->WriteToFile(myTimeFileName,serialPortReaderInstance->getDataTimeBuffor());
 
-    MainWindow::makePlot();
-
     serialPortReaderInstance->setFirstMeasurement(true);
     serialPortReaderInstance->setFaultyDataDetected(false);
     serialPortReaderInstance->clearDataBuffor();
@@ -143,10 +142,12 @@ void MainWindow::on_stopMeasurementButton_clicked()
 
     plotter->setVisible(false);
 
-    plotDataMaintainer->x_sig.clear();
-    plotDataMaintainer->y_sig.clear();
-    plotDataMaintainer->y_raw.clear();
+    plotter->y_raw.clear();
+    plotter->y_sig.clear();
+    plotter->x.clear();
     statusBar()->showMessage("Measurement terminated.",2000);
+
+
 
 }
 
@@ -160,58 +161,23 @@ void MainWindow::on_exitButton_clicked()
 //Funkcja odpowiadająca za odczyt danych z portu szeregowego
 void MainWindow::readSerial()
 {
-    serialPortReaderInstance->ReadSerial(arduino->readAll(), plotDataMaintainer, plotter);
-
-    MainWindow::updatePlot();
-    plotter->updatePlot();
-}
-
-void MainWindow::makePlot()
-{
-    ui->customPlot->addGraph();
-    ui->customPlot->graph(0)->setPen(QPen(Qt::blue));
-
-    ui->customPlot->addGraph();
-    ui->customPlot->graph(1)->setPen(QPen(Qt::red));
-
-    ui->customPlot->xAxis->setLabel("t[s]");
-    ui->customPlot->yAxis->setLabel("U[mV]");
-    ui->customPlot->xAxis->setRange(0,5000);
-    ui->customPlot->yAxis->setRange(0,2000);
-    ui->customPlot->replot();
-}
-
-void MainWindow::updatePlot()
-{
-
-    /*double freq = 1/((x.last()-x.value(x.length()-2))/1000);
-    qDebug() << freq;
-    if(freqTab.length() == 5)
+    dataBytes.append(arduino->readAll());
+    if(dataBytes.endsWith("\n"))
     {
-        freqTab.removeFirst();
-        freqTab.append(freq);
-        freq = freqTab.at(0);
-        freq += freqTab.at(1);
-        freq += freqTab.at(2);
-        freq += freqTab.at(3);
-        freq += freqTab.at(4);
-        //qDebug() << freq/5;
+        serialPortReaderInstance->ReadSerial(dataBytes, plotter);
+        dataBytes.clear();
+        plotter->updatePlot();
+    }
 
-    }ada
-    else freqTab.append(freq);*/
 
-    ui->customPlot->graph(0)->setData(plotDataMaintainer->x_sig,plotDataMaintainer->y_sig);
-    ui->customPlot->graph(1)->setData(plotDataMaintainer->x_sig,plotDataMaintainer->y_raw);
-    ui->customPlot->replot();
-    ui->customPlot->update();
 }
-
 
 void MainWindow::on_disconnectDeviceButton_clicked()
 {
     arduino->reset();
 
     ui->connectDeviceButton->setEnabled(true);
+    ui->startMeasurementButton->setEnabled(false);
     ui->disconnectDeviceButton->setEnabled(false);
 
     statusBar()->showMessage("Device disconnected.", 2000);
@@ -219,6 +185,5 @@ void MainWindow::on_disconnectDeviceButton_clicked()
 
 void MainWindow::shiftPlot(double valueToBeShifted)
 {
-    ui->customPlot->xAxis->moveRange(valueToBeShifted);
     emit shiftSecondPlot(valueToBeShifted);
 }

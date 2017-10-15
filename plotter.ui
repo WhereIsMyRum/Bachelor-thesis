@@ -13,8 +13,27 @@
   <property name="windowTitle">
    <string>Form</string>
   </property>
-  <layout class="QGridLayout" name="gridLayout">
-   <item row="0" column="0">
+  <layout class="QHBoxLayout" name="horizontalLayout_2">
+   <item>
+    <widget class="QPushButton" name="stopMeasurementButton">
+     <property name="minimumSize">
+      <size>
+       <width>60</width>
+       <height>30</height>
+      </size>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>60</width>
+       <height>30</height>
+      </size>
+     </property>
+     <property name="text">
+      <string>Stop</string>
+     </property>
+    </widget>
+   </item>
+   <item>
     <widget class="QCustomPlot" name="customPlot" native="true">
      <property name="minimumSize">
       <size>
@@ -24,14 +43,7 @@
      </property>
     </widget>
    </item>
-   <item row="1" column="0">
-    <widget class="QPushButton" name="stopMeasurementButton">
-     <property name="text">
-      <string>Stop Measurement</string>
-     </property>
-    </widget>
-   </item>
-   <item row="1" column="1">
+   <item>
     <spacer name="horizontalSpacer">
      <property name="orientation">
       <enum>Qt::Horizontal</enum>

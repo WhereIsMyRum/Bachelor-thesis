@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>850</width>
-    <height>477</height>
+    <width>384</width>
+    <height>425</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -203,22 +203,6 @@
       </item>
      </layout>
     </item>
-    <item alignment="Qt::AlignTop">
-     <widget class="QCustomPlot" name="customPlot" native="true">
-      <property name="minimumSize">
-       <size>
-        <width>500</width>
-        <height>400</height>
-       </size>
-      </property>
-      <property name="maximumSize">
-       <size>
-        <width>400</width>
-        <height>287</height>
-       </size>
-      </property>
-     </widget>
-    </item>
    </layout>
   </widget>
   <widget class="QMenuBar" name="menuBar">
@@ -226,7 +210,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>850</width>
+     <width>384</width>
      <height>20</height>
     </rect>
    </property>
@@ -246,14 +230,6 @@
   </widget>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
- <customwidgets>
-  <customwidget>
-   <class>QCustomPlot</class>
-   <extends>QWidget</extends>
-   <header>qcustomplot.h</header>
-   <container>1</container>
-  </customwidget>
- </customwidgets>
  <resources/>
  <connections/>
 </ui>
