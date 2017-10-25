@@ -6,6 +6,7 @@ Plotter::Plotter(QWidget *parent) :
     ui(new Ui::Plotter)
 {
     ui->setupUi(this);
+    ui->closeWindowButton->setEnabled(false);
     QObject::connect(parent,SIGNAL(shiftSecondPlot(double)),this,SLOT(shiftPLot(double)));
 }
 
@@ -44,10 +45,16 @@ void Plotter::updatePlot()
 
 void Plotter::on_stopMeasurementButton_clicked()
 {
+    ui->closeWindowButton->setEnabled(true);
     emit stopMeasurement();
 }
 
 void Plotter::shiftPLot(double valueToBeShifted)
 {
     ui->customPlot->xAxis->moveRange(valueToBeShifted);
+}
+
+void Plotter::on_closeWindowButton_clicked()
+{
+    emit closeWindow();
 }

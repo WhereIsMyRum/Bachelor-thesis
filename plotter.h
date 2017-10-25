@@ -24,11 +24,14 @@ private slots:
     void on_stopMeasurementButton_clicked();
     void shiftPLot(double);
 
+    void on_closeWindowButton_clicked();
+
 private:
     Ui::Plotter *ui;
 
 signals:
     void stopMeasurement();
+    void closeWindow();
 
 };
 

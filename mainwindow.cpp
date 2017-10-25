@@ -15,6 +15,7 @@ MainWindow::MainWindow(QWidget *parent) :
     plotter->setWindowFlag(Qt::Window);
     plotter->setVisible(false);
 
+    QObject::connect(plotter,SIGNAL(closeWindow()),this,SLOT(on_closeWindowButton_clicked()));
     //this->setFixedSize(850,450);
 
 }
@@ -140,8 +141,6 @@ void MainWindow::on_stopMeasurementButton_clicked()
     serialPortReaderInstance->clearRawDataBuffor();
     serialPortReaderInstance->clearDataTimeBuffor();
 
-    plotter->setVisible(false);
-
     plotter->y_raw.clear();
     plotter->y_sig.clear();
     plotter->x.clear();
@@ -186,4 +185,9 @@ void MainWindow::on_disconnectDeviceButton_clicked()
 void MainWindow::shiftPlot(double valueToBeShifted)
 {
     emit shiftSecondPlot(valueToBeShifted);
+}
+
+void MainWindow::on_closeWindowButton_clicked()
+{
+    plotter->setVisible(false);
 }

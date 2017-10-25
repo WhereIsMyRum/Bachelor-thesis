@@ -35,6 +35,7 @@ private slots:
     void on_exitButton_clicked();
     void on_connectDeviceButton_clicked();
     void on_disconnectDeviceButton_clicked();
+    void on_closeWindowButton_clicked();
 
     void readSerial();
     void shiftPlot(double);
