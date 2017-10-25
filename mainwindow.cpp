@@ -9,7 +9,6 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
 
     arduino = new QSerialPort(this);
-    fileWriterInstance = new FileWriter("C:/QtProjects/Inzynierka/Measurements/");
     serialPortReaderInstance = new SerialPortReader();
     plotter = new Plotter(this);
     plotter->setWindowFlag(Qt::Window);
@@ -93,9 +92,13 @@ void MainWindow::on_startMeasurementButton_clicked()
 {
     arduino->clear();
 
+    fileWriterInstance = new FileWriter("C:/QtProjects/Inzynierka/Measurements/");
+
     myDataFileName = fileWriterInstance->MakeNewFile();                                                           //pobierz nazwe pliku do zapisu z funkcji MakeNewFile()
+
     myRawDataFileName = myDataFileName;
     myRawDataFileName.replace(".txt","_raw.txt");
+
     myTimeFileName = myDataFileName;
     myTimeFileName.replace(".txt","_time.txt");
 

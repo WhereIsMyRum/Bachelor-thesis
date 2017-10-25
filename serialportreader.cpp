@@ -28,7 +28,6 @@ void SerialPortReader::ReadSerial(QByteArray serialData, Plotter *plotter)
         if(timeRegExp->exactMatch(dataListToAppend.first()))
         {
             plotter->x.append(((dataListToAppend.first().remove('t').toDouble())/1000000-firstTimeRead));
-            qDebug() << plotter->x.last();
             dataTimeBuffor.append(dataListToAppend.first());
             dataTimeBuffor.append("\r\n");
             dataListToAppend.removeFirst();

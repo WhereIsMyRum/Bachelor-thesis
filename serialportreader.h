@@ -7,7 +7,6 @@
 #include <QVector>
 #include <QDebug>
 #include <QObject>
-#include "plotdatamaintainer.h"
 #include "plotter.h"
 
 class SerialPortReader : public QObject

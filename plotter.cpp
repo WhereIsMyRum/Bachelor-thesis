@@ -56,5 +56,6 @@ void Plotter::shiftPLot(double valueToBeShifted)
 
 void Plotter::on_closeWindowButton_clicked()
 {
+    ui->closeWindowButton->setEnabled(false);
     emit closeWindow();
 }
