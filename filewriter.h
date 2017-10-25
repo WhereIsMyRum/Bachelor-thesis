@@ -11,7 +11,7 @@
 #include <QDir>
 #include <QFileInfo>
 
-class FileWriter
+class FileWriter : public QWidget
 {
 public:
     FileWriter(QString);

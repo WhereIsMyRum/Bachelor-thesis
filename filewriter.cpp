@@ -36,9 +36,10 @@ void FileWriter::WriteToFile(const QString fileName, const QString data)
 {
     QFile mFile(fileName);
 
+
     if(!mFile.open(QIODevice::WriteOnly | QIODevice::Append))                                       //Sprawdz czy mozna otworzyc plik do zapisu
     {
-        qDebug() << "Could not open file for writting";
+        QMessageBox::warning(this,"Error","Could not open file for writting!");
         return;
     }
 
