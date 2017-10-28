@@ -11,6 +11,8 @@ MainWindow::MainWindow(QWidget *parent) :
     arduino = new QSerialPort(this);
     serialPortReaderInstance = new SerialPortReader();
     plotter = new Plotter(this);
+    signalAnalyser = new SignalAnalyser(this);
+
     plotter->setWindowFlag(Qt::Window);
     plotter->setVisible(false);
 

@@ -14,6 +14,7 @@
 #include "qcustomplot.h"
 #include "serialportreader.h"
 #include "plotter.h"
+#include "signalanalyser.h"
 
 namespace Ui {
 class MainWindow;
@@ -27,6 +28,10 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
+private:
+    void readSerial();
+    void shiftPlot(double);
+
 private slots:
 
     void on_findDevicesButton_clicked();
@@ -36,10 +41,6 @@ private slots:
     void on_connectDeviceButton_clicked();
     void on_disconnectDeviceButton_clicked();
     void on_closeWindowButton_clicked();
-
-    void readSerial();
-    void shiftPlot(double);
-
 
 private:
     Ui::MainWindow *ui;
@@ -60,6 +61,7 @@ private:
     FileWriter *fileWriterInstance;
     SerialPortReader *serialPortReaderInstance;
     Plotter *plotter;
+    SignalAnalyser *signalAnalyser;
 
 signals:
     void shiftSecondPlot(double);

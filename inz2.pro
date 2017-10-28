@@ -29,14 +29,16 @@ SOURCES += \
         qcustomplot.cpp \
         filewriter.cpp \
         serialportreader.cpp \
-        plotter.cpp
+        plotter.cpp \
+    signalanalyser.cpp
 
 HEADERS += \
         mainwindow.h \
         qcustomplot.h \
         filewriter.h \
         serialportreader.h \
-        plotter.h
+        plotter.h \
+    signalanalyser.h
 
 FORMS += \
         mainwindow.ui \
