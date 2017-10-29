@@ -1,6 +1,7 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+
 #include <QMainWindow>
 #include <QtSerialPort/QSerialPort>
 #include <QtSerialPort/QSerialPortInfo>
@@ -13,8 +14,6 @@
 #include "filewriter.h"
 #include "qcustomplot.h"
 #include "serialportreader.h"
-#include "plotter.h"
-#include "signalanalyser.h"
 
 namespace Ui {
 class MainWindow;
@@ -28,9 +27,6 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
-private:
-    void readSerial();
-    void shiftPlot(double);
 
 private slots:
 
@@ -41,6 +37,9 @@ private slots:
     void on_connectDeviceButton_clicked();
     void on_disconnectDeviceButton_clicked();
     void on_closeWindowButton_clicked();
+
+    void readSerial();
+    void shiftPlot(double);
 
 private:
     Ui::MainWindow *ui;

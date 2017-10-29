@@ -1,8 +1,8 @@
 #ifndef SIGNALANALYSER_H
 #define SIGNALANALYSER_H
 
-#define WINDOW_LENGTH 150.0
-#define SAMPLING_FREQ 150
+#define WINDOW_LENGTH 700.0
+#define SAMPLING_FREQ 1000
 
 #include <QObject>
 #include <QVector>
@@ -20,7 +20,7 @@ public:
     //functions
     QVector<double> getSignalParams();
     //variables
-    QVector<double> time, signalValues, frequencyVector;
+    QVector<double> signalValues, frequencyVector, signalParams;
 
 private:
     double countMeanAbsAmplitude();

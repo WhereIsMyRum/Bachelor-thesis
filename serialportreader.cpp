@@ -11,7 +11,7 @@ SerialPortReader::SerialPortReader()
     faultyDataDetected = false;
 }
 
-void SerialPortReader::ReadSerial(QByteArray serialData, Plotter *plotter)
+void SerialPortReader::ReadSerial(QByteArray serialData, Plotter *plotter, SignalAnalyser *analyser)
 {
     serialDataString = new QString(QString::fromStdString(serialData.toStdString()));
     QStringList dataListToAppend = serialDataString->split("\r\n");
@@ -28,14 +28,20 @@ void SerialPortReader::ReadSerial(QByteArray serialData, Plotter *plotter)
         if(timeRegExp->exactMatch(dataListToAppend.first()))
         {
             plotter->x.append(((dataListToAppend.first().remove('t').toDouble())/1000000-firstTimeRead));
-            dataTimeBuffor.append(dataListToAppend.first());
+            plotter->x2.append(((dataListToAppend.first().remove('t').toDouble())/1000000-firstTimeRead));
+            dataTimeBuffor.append(QString::number(plotter->x.last()));
             dataTimeBuffor.append("\r\n");
             dataListToAppend.removeFirst();
+
+            if(plotter->x2.length() == WINDOW_LENGTH)
+            {
+                plotter->x2.clear();
+            }
 
             if(plotter->x.constLast()>15)
             {
                 plotter->x.removeFirst();
-                if(!plotter->y_sig.empty()) plotter->y_sig.removeFirst();
+                //if(!plotter->y_sig.empty()) plotter->y_sig.removeFirst();
                 if(!plotter->y_raw.empty()) plotter->y_raw.removeFirst();
                 emit plotRangeExceeded(plotter->x.value(plotter->x.length()-1)-plotter->x.value(plotter->x.length()-2));
             }
@@ -47,14 +53,28 @@ void SerialPortReader::ReadSerial(QByteArray serialData, Plotter *plotter)
             dataBuffor.append("\r\n");
             plotter->y_sig.append(dataListToAppend.first().toDouble());
             dataListToAppend.removeFirst();
+
+            if(plotter->y_sig.length() == WINDOW_LENGTH)
+            {
+                plotter->y_sig.clear();
+            }
         }
         else if(dataRawRegExp->exactMatch(dataListToAppend.first()))
         {
             dataListToAppend.first().remove('r');
             rawDataBuffor.append(dataListToAppend.first());
             rawDataBuffor.append("\r\n");
+
             plotter->y_raw.append(dataListToAppend.first().toDouble());
+            analyser->signalValues.append(dataListToAppend.first().toDouble());
+
             dataListToAppend.removeFirst();
+
+            if(analyser->signalValues.length() == WINDOW_LENGTH)
+            {
+                analyser->getSignalParams();
+                analyser->signalValues.clear();
+            }
         }
     }
 }
