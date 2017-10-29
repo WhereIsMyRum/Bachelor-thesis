@@ -1,10 +1,15 @@
 #ifndef SIGNALANALYSER_H
 #define SIGNALANALYSER_H
 
+#define WINDOW_LENGTH 150.0
+#define SAMPLING_FREQ 150
+
 #include <QObject>
 #include <QVector>
 #include <QDebug>
-#include <math.h>
+#include <cmath>
+#include <algorithm>
+#include <complex>
 
 class SignalAnalyser : public QObject
 {
@@ -13,19 +18,23 @@ public:
     explicit SignalAnalyser(QObject *parent = nullptr);
 
     //functions
-
+    QVector<double> getSignalParams();
     //variables
-    QVector<double> time, signalValues;
+    QVector<double> time, signalValues, frequencyVector;
 
 private:
     double countMeanAbsAmplitude();
-    double countAbsVariance();
+    double countAbsVariance(const double &signalAverage);
     double countMeanEnergy();
-    double countEffectiveValue();
+    double countEffectiveValue(const double &meanEnergy);
     double countMaximumValue();
-    double countFrequencyMedian();
-    double countMeanFrequency();
-    double countSpectralPowerDensity();
+    double countMedianValueOfNonZeroValue();
+    double countMedianFrequency(QVector<std::complex<double>> &inputDFT);
+    double countMeanFrequency(QVector<std::complex<double>> &inputDFT);
+
+    void getFrequencyVector();
+    QVector<std::complex<double>> computeDFT(const QVector<double> &inputSignal);
+
 
 };
 
