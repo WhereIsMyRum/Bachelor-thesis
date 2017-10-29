@@ -8,6 +8,9 @@
 #include <QDebug>
 #include <QObject>
 #include "plotter.h"
+#include "signalanalyser.h"
+
+#define WINDOW_LENGTH 700.0
 
 class SerialPortReader : public QObject
 {
@@ -16,7 +19,7 @@ class SerialPortReader : public QObject
 
 public:
     SerialPortReader();
-    void ReadSerial(QByteArray serialData, Plotter *plotter);
+    void ReadSerial(QByteArray serialData, Plotter *plotter, SignalAnalyser *analyser);
 
     void setFirstMeasurement(bool value);
     void setFaultyDataDetected(bool value);

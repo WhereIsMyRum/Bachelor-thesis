@@ -7,7 +7,6 @@ SignalAnalyser::SignalAnalyser(QObject *parent) : QObject(parent)
 
 QVector<double> SignalAnalyser::getSignalParams()
 {
-    QVector<double> signalParams;
     QVector<std::complex<double>> signalDFT;
 
     signalParams.append(SignalAnalyser::countMeanAbsAmplitude());

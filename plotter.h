@@ -1,6 +1,7 @@
 #ifndef PLOTTER_H
 #define PLOTTER_H
 
+
 #include <QWidget>
 
 namespace Ui {
@@ -18,7 +19,7 @@ public:
     void makePlot();
     void updatePlot();
 
-    QVector<double> x,y_sig,y_raw;
+    QVector<double> x,y_sig,y_raw,x2;
 
 private slots:
     void on_stopMeasurementButton_clicked();

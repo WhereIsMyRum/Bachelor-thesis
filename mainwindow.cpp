@@ -13,6 +13,8 @@ MainWindow::MainWindow(QWidget *parent) :
     plotter = new Plotter(this);
     signalAnalyser = new SignalAnalyser(this);
 
+
+
    /* signalAnalyser->signalValues.append(0);	signalAnalyser->signalValues.append(0.104528463267653);	signalAnalyser->signalValues.append(0.207911690817759);
     signalAnalyser->signalValues.append(0.309016994374947);	signalAnalyser->signalValues.append(0.406736643075800);	signalAnalyser->signalValues.append(0.500000000000000);
     signalAnalyser->signalValues.append(0.587785252292473);	signalAnalyser->signalValues.append(0.669130606358858);	signalAnalyser->signalValues.append(0.743144825477394);
@@ -127,7 +129,7 @@ void MainWindow::on_startMeasurementButton_clicked()
 {
     arduino->clear();
 
-    fileWriterInstance = new FileWriter("C:/QtProjects/Inzynierka/Measurements/");
+    fileWriterInstance = new FileWriter("E:/Inzynierka/Measurements/");
 
     myDataFileName = fileWriterInstance->MakeNewFile();                                                           //pobierz nazwe pliku do zapisu z funkcji MakeNewFile()
 
@@ -180,7 +182,6 @@ void MainWindow::on_stopMeasurementButton_clicked()
     serialPortReaderInstance->clearDataTimeBuffor();
 
     signalAnalyser->signalValues = plotter->y_sig;
-    qDebug() << signalAnalyser->getSignalParams();
 
     plotter->y_raw.clear();
     plotter->y_sig.clear();
@@ -204,11 +205,16 @@ void MainWindow::readSerial()
     dataBytes.append(arduino->readAll());
     if(dataBytes.endsWith("\n"))
     {
-        serialPortReaderInstance->ReadSerial(dataBytes, plotter);
+        serialPortReaderInstance->ReadSerial(dataBytes, plotter, signalAnalyser);
         dataBytes.clear();
         plotter->updatePlot();
     }
 
+    if(!signalAnalyser->signalParams.empty())
+    {
+        qDebug() << signalAnalyser->signalParams;
+        signalAnalyser->signalParams.clear();
+    }
 
 }
 

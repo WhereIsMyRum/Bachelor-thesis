@@ -34,10 +34,11 @@ void Plotter::makePlot()
 
 void Plotter::updatePlot()
 {
-    ui->customPlot->graph(0)->setData(x,y_sig);
+    ui->customPlot->graph(0)->setData(x2,y_sig);
     ui->customPlot->graph(1)->setData(x,y_raw);
 
     ui->customPlot->replot(QCustomPlot::rpQueued);
+
    //ui->customPlot->update();
 
 }
