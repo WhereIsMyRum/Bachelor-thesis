@@ -20,7 +20,7 @@ public:
     void updatePlot();
     void updateSignalParams(QVector<double> signalParams);
 
-    QVector<double> x,y_sig,y_raw,x2;
+    QVector<double> x,y_sig,y_raw;
 
 private slots:
     void on_stopMeasurementButton_clicked();

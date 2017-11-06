@@ -15,7 +15,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
 
 
-   /* signalAnalyser->signalValues.append(0);	signalAnalyser->signalValues.append(0.104528463267653);	signalAnalyser->signalValues.append(0.207911690817759);
+    /*signalAnalyser->signalValues.append(0);	signalAnalyser->signalValues.append(0.104528463267653);	signalAnalyser->signalValues.append(0.207911690817759);
     signalAnalyser->signalValues.append(0.309016994374947);	signalAnalyser->signalValues.append(0.406736643075800);	signalAnalyser->signalValues.append(0.500000000000000);
     signalAnalyser->signalValues.append(0.587785252292473);	signalAnalyser->signalValues.append(0.669130606358858);	signalAnalyser->signalValues.append(0.743144825477394);
     signalAnalyser->signalValues.append(0.809016994374948);	signalAnalyser->signalValues.append(0.866025403784439);	signalAnalyser->signalValues.append(0.913545457642601);
@@ -45,8 +45,17 @@ MainWindow::MainWindow(QWidget *parent) :
     signalAnalyser->signalValues.append(0.913545457642600);	signalAnalyser->signalValues.append(0.951056516295153);	        signalAnalyser->signalValues.append(0.978147600733806);     signalAnalyser->signalValues.append(0.994521895368273);     signalAnalyser->signalValues.append(1);                     signalAnalyser->signalValues.append(0.994521895368274);	signalAnalyser->signalValues.append(0.978147600733806);	signalAnalyser->signalValues.append(0.951056516295154);
     signalAnalyser->signalValues.append(0.913545457642602);	signalAnalyser->signalValues.append(0.866025403784439);         signalAnalyser->signalValues.append(0.809016994374948);     signalAnalyser->signalValues.append(0.743144825477394);
     signalAnalyser->signalValues.append(0.669130606358858);	signalAnalyser->signalValues.append(0.587785252292474);         signalAnalyser->signalValues.append(0.500000000000000);     signalAnalyser->signalValues.append(0.406736643075800);     signalAnalyser->signalValues.append(0.309016994374948);     signalAnalyser->signalValues.append(0.207911690817759);	signalAnalyser->signalValues.append(0.104528463267655);	signalAnalyser->signalValues.append(6.12323399573677e-16);
+    */
 
-    qDebug() << signalAnalyser->getSignalParams();*/
+    /*signalAnalyser->signalValues.append(0);
+    signalAnalyser->signalValues.append(5);
+    signalAnalyser->signalValues.append(10);
+    signalAnalyser->signalValues.append(7);
+    signalAnalyser->signalValues.append(13);
+    signalAnalyser->signalValues.append(4);
+    signalAnalyser->signalValues.append(9);
+    signalAnalyser->signalValues.append(3);*/
+    //qDebug() << signalAnalyser->getSignalParams();
 
     plotter->setWindowFlag(Qt::Window);
     plotter->setVisible(false);
@@ -181,8 +190,6 @@ void MainWindow::on_stopMeasurementButton_clicked()
     serialPortReaderInstance->clearRawDataBuffor();
     serialPortReaderInstance->clearDataTimeBuffor();
 
-    signalAnalyser->signalValues = plotter->y_sig;
-
     plotter->y_raw.clear();
     plotter->y_sig.clear();
     plotter->x.clear();
@@ -212,11 +219,8 @@ void MainWindow::readSerial()
 
     if(!signalAnalyser->signalParams.empty())
     {
-<<<<<<< HEAD
-        qDebug() << signalAnalyser->signalParams;
-=======
+
         plotter->updateSignalParams(signalAnalyser->signalParams);
->>>>>>> 41ef6e05a6db6a2eed92cbc4e0c310936ed49426
         signalAnalyser->signalParams.clear();
     }
 
