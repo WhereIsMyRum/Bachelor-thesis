@@ -129,7 +129,7 @@ void MainWindow::on_startMeasurementButton_clicked()
 {
     arduino->clear();
 
-    fileWriterInstance = new FileWriter("E:/Inzynierka/Measurements/");
+    fileWriterInstance = new FileWriter("C:/QtProjects/Inzynierka/Measurements/");
 
     myDataFileName = fileWriterInstance->MakeNewFile();                                                           //pobierz nazwe pliku do zapisu z funkcji MakeNewFile()
 
@@ -212,7 +212,7 @@ void MainWindow::readSerial()
 
     if(!signalAnalyser->signalParams.empty())
     {
-        qDebug() << signalAnalyser->signalParams;
+        plotter->updateSignalParams(signalAnalyser->signalParams);
         signalAnalyser->signalParams.clear();
     }
 
@@ -220,7 +220,7 @@ void MainWindow::readSerial()
 
 void MainWindow::on_disconnectDeviceButton_clicked()
 {
-    arduino->reset();
+    arduino->close();
 
     ui->connectDeviceButton->setEnabled(true);
     ui->startMeasurementButton->setEnabled(false);

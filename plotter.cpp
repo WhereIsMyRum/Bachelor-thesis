@@ -28,13 +28,13 @@ void Plotter::makePlot()
     ui->customPlot->xAxis->setLabel("t[s]");
     ui->customPlot->yAxis->setLabel("U[mV]");
     ui->customPlot->xAxis->setRange(0,20);
-    ui->customPlot->yAxis->setRange(0,6);
+    ui->customPlot->yAxis->setRange(-6,6);
     ui->customPlot->replot();
 }
 
 void Plotter::updatePlot()
 {
-    ui->customPlot->graph(0)->setData(x2,y_sig);
+    ui->customPlot->graph(0)->setData(x,y_sig);
     ui->customPlot->graph(1)->setData(x,y_raw);
 
     ui->customPlot->replot(QCustomPlot::rpQueued);
@@ -43,6 +43,17 @@ void Plotter::updatePlot()
 
 }
 
+void Plotter::updateSignalParams(QVector<double> signalParams)
+{
+    ui->meanAbsLineEdit->setText(QString::number(signalParams.at(0)));
+    ui->absVarianceLineEdit->setText(QString::number(signalParams.at(1)));
+    ui->meanEnergyLineEdit->setText(QString::number(signalParams.at(2)));
+    ui->effectiveValueLineEdit->setText(QString::number(signalParams.at(3)));
+    ui->maximumValueLineEdit->setText(QString::number(signalParams.at(4)));
+    ui->medianOfNonZeroLineEdit->setText(QString::number(signalParams.at(5)));
+    ui->meanFreqLineEdit->setText(QString::number(signalParams.at(6)));
+    ui->medianFreqLineEdit->setText(QString::number(signalParams.at(7)));
+}
 
 void Plotter::on_stopMeasurementButton_clicked()
 {
