@@ -212,7 +212,11 @@ void MainWindow::readSerial()
 
     if(!signalAnalyser->signalParams.empty())
     {
+<<<<<<< HEAD
         qDebug() << signalAnalyser->signalParams;
+=======
+        plotter->updateSignalParams(signalAnalyser->signalParams);
+>>>>>>> 41ef6e05a6db6a2eed92cbc4e0c310936ed49426
         signalAnalyser->signalParams.clear();
     }
 
@@ -220,7 +224,7 @@ void MainWindow::readSerial()
 
 void MainWindow::on_disconnectDeviceButton_clicked()
 {
-    arduino->reset();
+    arduino->close();
 
     ui->connectDeviceButton->setEnabled(true);
     ui->startMeasurementButton->setEnabled(false);

@@ -18,6 +18,7 @@ public:
 
     void makePlot();
     void updatePlot();
+    void updateSignalParams(QVector<double> signalParams);
 
     QVector<double> x,y_sig,y_raw,x2;
 

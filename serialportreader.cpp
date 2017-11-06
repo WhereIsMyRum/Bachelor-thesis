@@ -41,7 +41,11 @@ void SerialPortReader::ReadSerial(QByteArray serialData, Plotter *plotter, Signa
             if(plotter->x.constLast()>15)
             {
                 plotter->x.removeFirst();
+<<<<<<< HEAD
                 //if(!plotter->y_sig.empty()) plotter->y_sig.removeFirst();
+=======
+                if(!plotter->y_sig.empty()) plotter->y_sig.removeFirst(); //zakomentuj
+>>>>>>> 41ef6e05a6db6a2eed92cbc4e0c310936ed49426
                 if(!plotter->y_raw.empty()) plotter->y_raw.removeFirst();
                 emit plotRangeExceeded(plotter->x.value(plotter->x.length()-1)-plotter->x.value(plotter->x.length()-2));
             }
@@ -54,10 +58,17 @@ void SerialPortReader::ReadSerial(QByteArray serialData, Plotter *plotter, Signa
             plotter->y_sig.append(dataListToAppend.first().toDouble());
             dataListToAppend.removeFirst();
 
+<<<<<<< HEAD
             if(plotter->y_sig.length() == WINDOW_LENGTH)
             {
                 plotter->y_sig.clear();
             }
+=======
+            /*if(plotter->y_sig.length() == WINDOW_LENGTH)
+            {
+                plotter->y_sig.clear();
+            }*/
+>>>>>>> 41ef6e05a6db6a2eed92cbc4e0c310936ed49426
         }
         else if(dataRawRegExp->exactMatch(dataListToAppend.first()))
         {
@@ -65,8 +76,13 @@ void SerialPortReader::ReadSerial(QByteArray serialData, Plotter *plotter, Signa
             rawDataBuffor.append(dataListToAppend.first());
             rawDataBuffor.append("\r\n");
 
+<<<<<<< HEAD
             plotter->y_raw.append(dataListToAppend.first().toDouble());
             analyser->signalValues.append(dataListToAppend.first().toDouble());
+=======
+            plotter->y_raw.append(dataListToAppend.first().toDouble()-2.4);
+            analyser->signalValues.append(dataListToAppend.first().toDouble()-2.4);
+>>>>>>> 41ef6e05a6db6a2eed92cbc4e0c310936ed49426
 
             dataListToAppend.removeFirst();
 

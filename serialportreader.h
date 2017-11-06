@@ -10,6 +10,10 @@
 #include "plotter.h"
 #include "signalanalyser.h"
 
+<<<<<<< HEAD
+=======
+#define WINDOW_LENGTH 700.0
+>>>>>>> 41ef6e05a6db6a2eed92cbc4e0c310936ed49426
 
 class SerialPortReader : public QObject
 {

@@ -30,7 +30,8 @@ SOURCES += \
         filewriter.cpp \
         serialportreader.cpp \
         plotter.cpp \
-    signalanalyser.cpp
+    signalanalyser.cpp \
+    classifiersclass.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -38,7 +39,8 @@ HEADERS += \
         filewriter.h \
         serialportreader.h \
         plotter.h \
-    signalanalyser.h
+    signalanalyser.h \
+    classifiersclass.h
 
 FORMS += \
         mainwindow.ui \
