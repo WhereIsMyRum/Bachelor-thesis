@@ -1,7 +1,7 @@
 #ifndef SIGNALANALYSER_H
 #define SIGNALANALYSER_H
 
-#define WINDOW_LENGTH 700.0
+#define WINDOW_LENGTH 1024.0
 #define SAMPLING_FREQ 1000
 
 #include <QObject>
@@ -10,6 +10,7 @@
 #include <cmath>
 #include <algorithm>
 #include <complex>
+#include <valarray>
 
 class SignalAnalyser : public QObject
 {
@@ -21,6 +22,7 @@ public:
     QVector<double> getSignalParams();
     //variables
     QVector<double> signalValues, frequencyVector, signalParams;
+
 
 private:
     double countMeanAbsAmplitude();
@@ -34,6 +36,9 @@ private:
 
     void getFrequencyVector();
     QVector<std::complex<double>> computeDFT(const QVector<double> &inputSignal);
+    QVector<std::complex<double>> computeFFT(const QVector<double> &inputSignal);
+    void FFT(QVector<std::complex<double>>&);
+    QVector<std::complex<double>> sliceQVector(const QVector<std::complex<double>> &inputSignal, std::size_t start, std::size_t size, std::size_t stride);
 
 
 };

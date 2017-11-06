@@ -16,7 +16,7 @@ QVector<double> SignalAnalyser::getSignalParams()
     signalParams.append(SignalAnalyser::countMaximumValue());
     signalParams.append(SignalAnalyser::countMedianValueOfNonZeroValue());
 
-    signalDFT = SignalAnalyser::computeDFT(signalValues);
+    signalDFT = SignalAnalyser::computeFFT(signalValues);
 
     signalParams.append(SignalAnalyser::countMeanFrequency(signalDFT));
     signalParams.append(SignalAnalyser::countMedianFrequency(signalDFT));
@@ -153,7 +153,7 @@ QVector<std::complex<double>> SignalAnalyser::computeDFT(const QVector<double> &
 {
     QVector<std::complex<double>> signalDFT;
 
-    std::size_t n = inputSignal.length();
+    const std::size_t n = inputSignal.length();
     for(std::size_t k = 0; k < n; k++)
     {
         std::complex<double> sum(0.0,0.0);
@@ -165,9 +165,69 @@ QVector<std::complex<double>> SignalAnalyser::computeDFT(const QVector<double> &
         signalDFT.push_back(sum);
         signalDFT.last() = (signalDFT.last()/(WINDOW_LENGTH/2))*2.0;
     }
+
     signalDFT = signalDFT.mid(0, WINDOW_LENGTH/2);
+
     return signalDFT;
 }
+
+QVector<std::complex<double>> SignalAnalyser::computeFFT(const QVector<double> &inputSignal)
+{
+
+    QVector<std::complex<double>> signalFFT;
+
+    for(int i = 0; i < inputSignal.length(); i++)
+    {
+        signalFFT.append(inputSignal[i]);
+    }
+
+    FFT(signalFFT);
+
+    signalFFT = signalFFT.mid(0,WINDOW_LENGTH/2);
+    for(int i = 0; i < signalFFT.length(); i++)
+    {
+        signalFFT[i] = (signalFFT[i]/(WINDOW_LENGTH/2)) * 2.0;
+    }
+
+    return signalFFT;
+
+}
+
+void SignalAnalyser::FFT(QVector<std::complex<double>>& signalFFT)
+{
+    const size_t N = signalFFT.length();
+    if(N < 2) {}
+
+    else
+    {
+
+        QVector<std::complex<double>> even = sliceQVector(signalFFT, 0,N/2, 2);
+        QVector<std::complex<double>> odd = sliceQVector(signalFFT, 1, N/2,2);
+
+        FFT(even);
+        FFT(odd);
+
+        for(size_t k = 0; k < N/2; k++)
+        {
+            std::complex<double> t =  std::polar(1.0, -2 * M_PI * k/N) * odd[k];
+            signalFFT[k] = even[k] + t;
+            signalFFT[k+N/2] = even[k] - t;
+        }
+    }
+}
+
+QVector<std::complex<double> > SignalAnalyser::sliceQVector(const QVector<std::complex<double> > &inputSignal, std::size_t start, std::size_t size, std::size_t stride)
+{
+    QVector<std::complex<double>> slicedVector;
+    for(int i = 0; i < size; i++)
+    {
+        slicedVector.append(inputSignal[start + i*stride]);
+    }
+    return slicedVector;
+}
+
+
+
 
 
 
