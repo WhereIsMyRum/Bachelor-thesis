@@ -227,5 +227,10 @@ QVector<std::complex<double> > SignalAnalyser::sliceQVector(const QVector<std::c
 }
 
 
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> d064b4a0416da593fa603ab062ce803c07d43a3c
 
 
