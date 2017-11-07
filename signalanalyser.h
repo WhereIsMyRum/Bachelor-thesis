@@ -1,7 +1,7 @@
 #ifndef SIGNALANALYSER_H
 #define SIGNALANALYSER_H
 
-#define WINDOW_LENGTH 1024.0
+#define WINDOW_LENGTH 512.0
 #define SAMPLING_FREQ 1000
 
 #include <QObject>

@@ -136,36 +136,42 @@ void MainWindow::on_connectDeviceButton_clicked()
 //Rozpoczęcie pomiaru
 void MainWindow::on_startMeasurementButton_clicked()
 {
-    arduino->clear();
+    if(ui->baselineLineEdit->text() != "")
+    {
+        arduino->clear();
 
-    fileWriterInstance = new FileWriter("E:/Inzynierka/Measurements/");
+        fileWriterInstance = new FileWriter("C:/QtProjects/Inzynierka/Measurements/");
 
-    myDataFileName = fileWriterInstance->MakeNewFile();                                                           //pobierz nazwe pliku do zapisu z funkcji MakeNewFile()
+        myDataFileName = fileWriterInstance->MakeNewFile();                                                           //pobierz nazwe pliku do zapisu z funkcji MakeNewFile()
 
-    myRawDataFileName = myDataFileName;
-    myRawDataFileName.replace(".txt","_raw.txt");
+        myRawDataFileName = myDataFileName;
+        myRawDataFileName.replace(".txt","_raw.txt");
 
-    myTimeFileName = myDataFileName;
-    myTimeFileName.replace(".txt","_time.txt");
+        myTimeFileName = myDataFileName;
+        myTimeFileName.replace(".txt","_time.txt");
 
-    QDateTime dateAndTime;                                                                             //wstaw date i czas w pierwszej linii pomiaru
-    fileWriterInstance->WriteToFile(myDataFileName,dateAndTime.currentDateTime().toString());
+        QDateTime dateAndTime;                                                                             //wstaw date i czas w pierwszej linii pomiaru
+        fileWriterInstance->WriteToFile(myDataFileName,dateAndTime.currentDateTime().toString());
 
-    plotter->makePlot();
-    plotter->setVisible(true);
-    plotter->showMaximized();
+        plotter->makePlot();
+        plotter->setVisible(true);
+        plotter->showMaximized();
 
-    QObject::connect(arduino,SIGNAL(readyRead()),this,SLOT(readSerial()));                             //polacz sygnal z portu ze slotem do odczytu z portu
-    QObject::connect(serialPortReaderInstance,SIGNAL(plotRangeExceeded(double)),this,SLOT(shiftPlot(double)));
-    QObject::connect(plotter,SIGNAL(stopMeasurement()),this,SLOT(on_stopMeasurementButton_clicked()));
+        QObject::connect(arduino,SIGNAL(readyRead()),this,SLOT(readSerial()));                             //polacz sygnal z portu ze slotem do odczytu z portu
+        QObject::connect(serialPortReaderInstance,SIGNAL(plotRangeExceeded(double)),this,SLOT(shiftPlot(double)));
+        QObject::connect(plotter,SIGNAL(stopMeasurement()),this,SLOT(on_stopMeasurementButton_clicked()));
 
-    ui->stopMeasurementButton->setEnabled(true);
-    ui->startMeasurementButton->setEnabled(false);
-    ui->exitButton->setEnabled(false);
-    ui->disconnectDeviceButton->setEnabled(false);
+        ui->stopMeasurementButton->setEnabled(true);
+        ui->startMeasurementButton->setEnabled(false);
+        ui->exitButton->setEnabled(false);
+        ui->disconnectDeviceButton->setEnabled(false);
 
-    statusBar()->showMessage("Measurement in progress...");
-
+        statusBar()->showMessage("Measurement in progress...");
+    }
+    else
+    {
+        QMessageBox::warning(this,"Error","Make sure to enter baseline modifier. You can start with value of 2.2");
+    }
 }
 
 //Zakończenie pomiaru
@@ -212,7 +218,7 @@ void MainWindow::readSerial()
     dataBytes.append(arduino->readAll());
     if(dataBytes.endsWith("\n"))
     {
-        serialPortReaderInstance->ReadSerial(dataBytes, plotter, signalAnalyser);
+        serialPortReaderInstance->ReadSerial(dataBytes, plotter, signalAnalyser, ui->baselineLineEdit->text().toDouble());
         dataBytes.clear();
         plotter->updatePlot();
     }

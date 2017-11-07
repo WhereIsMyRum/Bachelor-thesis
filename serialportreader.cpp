@@ -11,7 +11,7 @@ SerialPortReader::SerialPortReader()
     faultyDataDetected = false;
 }
 
-void SerialPortReader::ReadSerial(QByteArray serialData, Plotter *plotter, SignalAnalyser *analyser)
+void SerialPortReader::ReadSerial(QByteArray serialData, Plotter *plotter, SignalAnalyser *analyser, const double &baselineModifier)
 {
     serialDataString = new QString(QString::fromStdString(serialData.toStdString()));
     QStringList dataListToAppend = serialDataString->split("\r\n");
@@ -57,8 +57,8 @@ void SerialPortReader::ReadSerial(QByteArray serialData, Plotter *plotter, Signa
             rawDataBuffor.append(dataListToAppend.first());
             rawDataBuffor.append("\r\n");
 
-            plotter->y_raw.append(dataListToAppend.first().toDouble()-2.4);
-            analyser->signalValues.append(dataListToAppend.first().toDouble()-2.4);
+            plotter->y_raw.append(dataListToAppend.first().toDouble() - baselineModifier);
+            analyser->signalValues.append(dataListToAppend.first().toDouble() - baselineModifier);
 
             dataListToAppend.removeFirst();
 
