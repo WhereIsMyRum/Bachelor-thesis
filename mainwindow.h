@@ -14,6 +14,7 @@
 #include "filewriter.h"
 #include "qcustomplot.h"
 #include "serialportreader.h"
+#include "classifiersclass.h"
 
 namespace Ui {
 class MainWindow;
@@ -61,6 +62,7 @@ private:
     SerialPortReader *serialPortReaderInstance;
     Plotter *plotter;
     SignalAnalyser *signalAnalyser;
+    ClassifiersClass *signalClassifier;
 
 signals:
     void shiftSecondPlot(double);

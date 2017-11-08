@@ -10,6 +10,7 @@
 #include <QStringList>
 #include <QDir>
 #include <QFileInfo>
+#include <dlib/matrix.h>
 
 class FileWriter : public QWidget
 {
@@ -18,6 +19,8 @@ public:
 public slots:
     void WriteToFile(QString fileName, QString data);
     QString MakeNewFile();
+    std::vector<dlib::matrix<double,8,1>> ReadTrainingData(const QString pathToTrainingData, std::vector<double>& labels);
+
 public:
     QString pathToSaveDirectory;
 

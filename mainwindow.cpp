@@ -9,11 +9,14 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
 
     arduino = new QSerialPort(this);
+    fileWriterInstance = new FileWriter("E:/Inzynierka/Measurements/");
     serialPortReaderInstance = new SerialPortReader();
     plotter = new Plotter(this);
     signalAnalyser = new SignalAnalyser(this);
 
+    std::vector<double> labels;
 
+    signalClassifier = new ClassifiersClass(fileWriterInstance->ReadTrainingData("E:/Inzynierka/extracted_features.txt", labels),labels); // get vector of matrices containing training samples with labels;
 
     /*signalAnalyser->signalValues.append(0);	signalAnalyser->signalValues.append(0.104528463267653);	signalAnalyser->signalValues.append(0.207911690817759);
     signalAnalyser->signalValues.append(0.309016994374947);	signalAnalyser->signalValues.append(0.406736643075800);	signalAnalyser->signalValues.append(0.500000000000000);
@@ -140,8 +143,6 @@ void MainWindow::on_startMeasurementButton_clicked()
     {
         arduino->clear();
 
-        fileWriterInstance = new FileWriter("C:/QtProjects/Inzynierka/Measurements/");
-
         myDataFileName = fileWriterInstance->MakeNewFile();                                                           //pobierz nazwe pliku do zapisu z funkcji MakeNewFile()
 
         myRawDataFileName = myDataFileName;
@@ -152,6 +153,7 @@ void MainWindow::on_startMeasurementButton_clicked()
 
         QDateTime dateAndTime;                                                                             //wstaw date i czas w pierwszej linii pomiaru
         fileWriterInstance->WriteToFile(myDataFileName,dateAndTime.currentDateTime().toString());
+        fileWriterInstance->WriteToFile(myDataFileName, "Baseline modifier: " + ui->baselineLineEdit->text());
 
         plotter->makePlot();
         plotter->setVisible(true);
@@ -208,7 +210,7 @@ void MainWindow::on_stopMeasurementButton_clicked()
 //Wyłączenie aplikacji
 void MainWindow::on_exitButton_clicked()
 {
-    QApplication::quit();
+    qApp->exit();
 }
 
 
@@ -227,6 +229,13 @@ void MainWindow::readSerial()
     {
 
         plotter->updateSignalParams(signalAnalyser->signalParams);
+
+        dlib::matrix<double,8,1> sampleDataMatrix;
+        sampleDataMatrix = signalAnalyser->signalParams.at(0), signalAnalyser->signalParams.at(1), signalAnalyser->signalParams.at(2), signalAnalyser->signalParams.at(3),
+                            signalAnalyser->signalParams.at(4), signalAnalyser->signalParams.at(5), signalAnalyser->signalParams.at(6), signalAnalyser->signalParams.at(7);
+
+        qDebug() << signalClassifier->classifySignal(sampleDataMatrix);
+
         signalAnalyser->signalParams.clear();
     }
 

@@ -163,7 +163,7 @@ QVector<std::complex<double>> SignalAnalyser::computeDFT(const QVector<double> &
             sum += inputSignal[t] * std::exp(angle);
         }
         signalDFT.push_back(sum);
-        signalDFT.last() = (signalDFT.last()/(WINDOW_LENGTH/2))*2.0;
+        signalDFT.last() = (signalDFT.last()/(WINDOW_LENGTH/2));
     }
 
     signalDFT = signalDFT.mid(0, WINDOW_LENGTH/2);
@@ -183,10 +183,10 @@ QVector<std::complex<double>> SignalAnalyser::computeFFT(const QVector<double> &
 
     FFT(signalFFT);
 
-    signalFFT = signalFFT.mid(0,WINDOW_LENGTH/2);
+    signalFFT = signalFFT.mid(0,WINDOW_LENGTH/2-1);         //upewnij się z tyms
     for(int i = 0; i < signalFFT.length(); i++)
     {
-        signalFFT[i] = (signalFFT[i]/(WINDOW_LENGTH/2)) * 2.0;
+        signalFFT[i] = (signalFFT[i]/(WINDOW_LENGTH));
     }
 
     return signalFFT;

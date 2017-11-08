@@ -10,7 +10,6 @@
 #include <cmath>
 #include <algorithm>
 #include <complex>
-#include <valarray>
 
 class SignalAnalyser : public QObject
 {
