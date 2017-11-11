@@ -234,10 +234,15 @@ void MainWindow::readSerial()
         sampleDataMatrix = signalAnalyser->signalParams.at(0), signalAnalyser->signalParams.at(1), signalAnalyser->signalParams.at(2), signalAnalyser->signalParams.at(3),
                             signalAnalyser->signalParams.at(4), signalAnalyser->signalParams.at(5), signalAnalyser->signalParams.at(6), signalAnalyser->signalParams.at(7);
 
+<<<<<<< HEAD
         if(signalClassifier->classifySignalUsingSVM(sampleDataMatrix)) {plotter->showContractionLabel();qDebug()<< "true";}
         else {plotter->hideContractionLabel();qDebug() << "false";}
         //qDebug() << "KRR: " << signalClassifier->classifySignalUsingKRR(sampleDataMatrix);
 
+=======
+        qDebug() << "SVM: " << signalClassifier->classifySignalUsingSVM(sampleDataMatrix);
+        qDebug() << "KRR: " << signalClassifier->classifySignalUsingKRR(sampleDataMatrix);
+>>>>>>> cc8001d5ff288d587c7c248e029b91ae221acddd
 
         signalAnalyser->signalParams.clear();
     }
