@@ -19,6 +19,8 @@ public:
     void makePlot();
     void updatePlot();
     void updateSignalParams(QVector<double> signalParams);
+    void showContractionLabel();
+    void hideContractionLabel();
 
     QVector<double> x,y_sig,y_raw;
 

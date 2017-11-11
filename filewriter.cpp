@@ -5,10 +5,10 @@ FileWriter::FileWriter(QString usersPath)
     pathToSaveDirectory = usersPath;
 }
 
-QString FileWriter::MakeNewFile()
+QString FileWriter::MakeNewFile(QString fileName)
 {
     QStringList txtFilesList;
-    QString newFileName = "test1.txt";
+    QString newFileName = fileName + ".txt";
     QString tempPathToSaveDirectory = pathToSaveDirectory;
     int newFileNumber = 2;
     bool fileExists = true;
@@ -22,7 +22,7 @@ QString FileWriter::MakeNewFile()
         fileExists = txtFilesList.contains(newFileName);
         if(fileExists)
         {
-            newFileName = "test";
+            newFileName = fileName;
             newFileName.append(QString("%1").arg(newFileNumber));
             newFileName.append(".txt");
             newFileNumber++;
@@ -77,7 +77,7 @@ std::vector<dlib::matrix<double,8,1>> FileWriter::ReadTrainingData(const QString
         for(int j = 0; j < singleDataList.length(); j++)
         {
             if(j == 8) labels.push_back(singleDataList.at(j).toDouble());
-            else dataQVector.append(singleDataList.at(j).toDouble());qDebug();
+            else dataQVector.append(singleDataList.at(j).toDouble());
         }
 
         dataMatrix = dataQVector.at(0), dataQVector.at(1), dataQVector.at(2), dataQVector.at(3),  dataQVector.at(4),

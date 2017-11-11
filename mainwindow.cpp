@@ -9,14 +9,14 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
 
     arduino = new QSerialPort(this);
-    fileWriterInstance = new FileWriter("E:/Inzynierka/Measurements/");
+    fileWriterInstance = new FileWriter("C:/QtProjects/Inzynierka/Measurements/");
     serialPortReaderInstance = new SerialPortReader();
     plotter = new Plotter(this);
     signalAnalyser = new SignalAnalyser(this);
 
     std::vector<double> labels;
 
-    signalClassifier = new ClassifiersClass(fileWriterInstance->ReadTrainingData("E:/Inzynierka/extracted_features.txt", labels),labels); // get vector of matrices containing training samples with labels;
+    signalClassifier = new ClassifiersClass(fileWriterInstance->ReadTrainingData("C:/QtProjects/Inzynierka/extracted_features.txt", labels),labels); // get vector of matrices containing training samples with labels;
 
     /*signalAnalyser->signalValues.append(0);	signalAnalyser->signalValues.append(0.104528463267653);	signalAnalyser->signalValues.append(0.207911690817759);
     signalAnalyser->signalValues.append(0.309016994374947);	signalAnalyser->signalValues.append(0.406736643075800);	signalAnalyser->signalValues.append(0.500000000000000);
@@ -139,11 +139,11 @@ void MainWindow::on_connectDeviceButton_clicked()
 //Rozpoczęcie pomiaru
 void MainWindow::on_startMeasurementButton_clicked()
 {
-    if(ui->baselineLineEdit->text() != "")
+    if(ui->baselineLineEdit->text() != "" && ui->fileNameLineEdit->text() != "")
     {
         arduino->clear();
 
-        myDataFileName = fileWriterInstance->MakeNewFile();                                                           //pobierz nazwe pliku do zapisu z funkcji MakeNewFile()
+        myDataFileName = fileWriterInstance->MakeNewFile(ui->fileNameLineEdit->text());                                                           //pobierz nazwe pliku do zapisu z funkcji MakeNewFile()
 
         myRawDataFileName = myDataFileName;
         myRawDataFileName.replace(".txt","_raw.txt");
@@ -172,7 +172,7 @@ void MainWindow::on_startMeasurementButton_clicked()
     }
     else
     {
-        QMessageBox::warning(this,"Error","Make sure to enter baseline modifier. You can start with value of 2.2");
+        QMessageBox::warning(this,"Error","Make sure to enter baseline modifier and file name.");
     }
 }
 
@@ -234,7 +234,10 @@ void MainWindow::readSerial()
         sampleDataMatrix = signalAnalyser->signalParams.at(0), signalAnalyser->signalParams.at(1), signalAnalyser->signalParams.at(2), signalAnalyser->signalParams.at(3),
                             signalAnalyser->signalParams.at(4), signalAnalyser->signalParams.at(5), signalAnalyser->signalParams.at(6), signalAnalyser->signalParams.at(7);
 
-        qDebug() << signalClassifier->classifySignal(sampleDataMatrix);
+        if(signalClassifier->classifySignalUsingSVM(sampleDataMatrix)) {plotter->showContractionLabel();qDebug()<< "true";}
+        else {plotter->hideContractionLabel();qDebug() << "false";}
+        //qDebug() << "KRR: " << signalClassifier->classifySignalUsingKRR(sampleDataMatrix);
+
 
         signalAnalyser->signalParams.clear();
     }

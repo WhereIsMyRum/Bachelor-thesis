@@ -18,7 +18,7 @@ public:
     FileWriter(QString);
 public slots:
     void WriteToFile(QString fileName, QString data);
-    QString MakeNewFile();
+    QString MakeNewFile(QString fileName);
     std::vector<dlib::matrix<double,8,1>> ReadTrainingData(const QString pathToTrainingData, std::vector<double>& labels);
 
 public:

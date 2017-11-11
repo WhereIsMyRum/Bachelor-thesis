@@ -7,6 +7,7 @@ Plotter::Plotter(QWidget *parent) :
 {
     ui->setupUi(this);
     ui->closeWindowButton->setEnabled(false);
+    hideContractionLabel();
     QObject::connect(parent,SIGNAL(shiftSecondPlot(double)),this,SLOT(shiftPLot(double)));
 }
 
@@ -53,6 +54,16 @@ void Plotter::updateSignalParams(QVector<double> signalParams)
     ui->medianOfNonZeroLineEdit->setText(QString::number(signalParams.at(5)));
     ui->meanFreqLineEdit->setText(QString::number(signalParams.at(6)));
     ui->medianFreqLineEdit->setText(QString::number(signalParams.at(7)));
+}
+
+void Plotter::showContractionLabel()
+{
+    ui->contractionLabel->setVisible(true);
+}
+
+void Plotter::hideContractionLabel()
+{
+    ui->contractionLabel->setVisible(false);
 }
 
 void Plotter::on_stopMeasurementButton_clicked()

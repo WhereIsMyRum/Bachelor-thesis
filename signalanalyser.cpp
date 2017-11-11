@@ -77,7 +77,7 @@ double SignalAnalyser::countMedianValueOfNonZeroValue()
 
     medianVector.removeAll(0);
 
-    qSort(medianVector);
+    std::sort(medianVector.begin(),medianVector.end());
 
     if(medianVector.length()%2 == 0)
     {
@@ -219,7 +219,7 @@ void SignalAnalyser::FFT(QVector<std::complex<double>>& signalFFT)
 QVector<std::complex<double> > SignalAnalyser::sliceQVector(const QVector<std::complex<double> > &inputSignal, std::size_t start, std::size_t size, std::size_t stride)
 {
     QVector<std::complex<double>> slicedVector;
-    for(int i = 0; i < size; i++)
+    for(std::size_t i = 0; i < size; i++)
     {
         slicedVector.append(inputSignal[start + i*stride]);
     }
