@@ -11,22 +11,40 @@ ClassifiersClass::ClassifiersClass(const std::vector<sample_type>& dataVector, c
     {
         for(double C = 1; C < 100000; C *= 5)
         {
-            trainer.set_kernel(kernel_type(gamma));
-            trainer.set_c(C);
+            svm_trainer.set_kernel(kernel_type(gamma));
+            svm_trainer.set_c(C);
 
             std::cout << "gamma: " << gamma << "      C: " << C;
-            std::cout << "\ncross validation accuracy: " << dlib::cross_validate_trainer(trainer,tempDataVector,dataLabels,3);
+            std::cout << "\ncross validation accuracy: " << dlib::cross_validate_svm_trainer(svm_trainer,tempDataVector,dataLabels,3);
         }
     }*/
 
-    trainer.set_kernel(kernel_type(0.00125));
-    trainer.set_c(78125);
+    svm_trainer.set_kernel(kernel_type(0.00125));
+    svm_trainer.set_c(78125);
 
-    learned_function.normalizer = normalizer;
-    learned_function.function = trainer.train(tempDataVector,dataLabels);
+    svm_decision_function.normalizer = normalizer;
+    svm_decision_function.function = svm_trainer.train(tempDataVector,dataLabels);
 
-    //std::cout << "\nnumber of support vector in learned_functions is: " << learned_function.function.basis_vectors.size() << endl;
+    //qDebug() << "\nnumber of support vector in learned_functions is: " << learned_function.function.basis_vectors.size() << "\n";
 
+    krr_trainer.use_classification_loss_for_loo_cv();
+
+    /*for(double gamma =0.000001; gamma<=1; gamma *= 5)
+    {
+        krr_trainer.set_kernel(kernel_type(gamma));
+
+        std::vector<double> loo_values;
+        krr_trainer.train(tempDataVector,dataLabels,loo_values);
+        const double classification_accuracy = dlib::mean_sign_agreement(dataLabels,loo_values);
+        qDebug() <<"gamma: " << gamma << "   LOO accuracy: " <<classification_accuracy;
+    }*/
+
+    krr_trainer.set_kernel(kernel_type(0.000625));
+
+    krr_decision_function.normalizer = normalizer;
+    krr_decision_function.function = krr_trainer.train(tempDataVector,dataLabels);
+
+    //std::cout << "\nnumberof basis vectors in our learned function is " << krr_decision_function.function.basis_vectors.size() << "\n";
 }
 
 void ClassifiersClass::normalizeSamples(std::vector<sample_type> &dataVector)
@@ -37,8 +55,15 @@ void ClassifiersClass::normalizeSamples(std::vector<sample_type> &dataVector)
     }
 }
 
-bool ClassifiersClass::classifySignal(sample_type &sampleDataMatrix)
+bool ClassifiersClass::classifySignalUsingSVM(sample_type &sampleDataMatrix)
 {
-    if(learned_function(sampleDataMatrix) > 0) return true;
+    if(svm_decision_function(sampleDataMatrix) > 0) return true;
     else return false;
+}
+
+bool ClassifiersClass::classifySignalUsingKRR(sample_type &sampleDataMatrix)
+{
+    if(krr_decision_function(sampleDataMatrix) > 0) return true;
+    else return false;
+
 }

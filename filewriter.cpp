@@ -5,10 +5,10 @@ FileWriter::FileWriter(QString usersPath)
     pathToSaveDirectory = usersPath;
 }
 
-QString FileWriter::MakeNewFile()
+QString FileWriter::MakeNewFile(QString fileName)
 {
     QStringList txtFilesList;
-    QString newFileName = "test1.txt";
+    QString newFileName = fileName + ".txt";
     QString tempPathToSaveDirectory = pathToSaveDirectory;
     int newFileNumber = 2;
     bool fileExists = true;
@@ -22,7 +22,7 @@ QString FileWriter::MakeNewFile()
         fileExists = txtFilesList.contains(newFileName);
         if(fileExists)
         {
-            newFileName = "test";
+            newFileName = fileName;
             newFileName.append(QString("%1").arg(newFileNumber));
             newFileName.append(".txt");
             newFileNumber++;
