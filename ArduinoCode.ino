@@ -24,7 +24,7 @@ void loop()
       if(str1.length() > 6) str1.remove(str1.indexOf('.')+3, str1.length() - str1.indexOf('.')+2);
       str1 = str1 + "d";
       
-      float voltage2 = analogRead(A1);
+      float voltage2 = analogRead(A2);
       voltage2 = voltage2 * (5.0 / 1023.0);
       String str2 = String(voltage2,DEC);
       if(str2.length() > 6) str2.remove(str2.indexOf('.')+3, str2.length() - str2.indexOf('.')+2);
@@ -38,9 +38,9 @@ void loop()
       //if(str2.length() > 6) str2.remove(str2.indexOf('.')+3, str2.length() - str2.indexOf('.')+2);
       //str2 = str2 + "r";
       
-      //Serial.println(str1);
+      Serial.println(str1);
       Serial.println(str2);
-      //Serial.println(str3);
+      Serial.println(str3);
       previousMicros = currentMicros;
       i++;
       j++;
