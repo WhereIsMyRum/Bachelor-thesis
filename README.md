@@ -9,7 +9,11 @@
 <p class="how">How</p>
 <h3 class="technologies">Technologies used</h3>
 <ul class="technologies">
-  <li class="technologies" hover="Python">Python</li>
+  <li class="technologies" hover="C++">C++</li>
+  <li class="technologies" hover="C">C</li>
+  <li class="technologies" hover="Qt">Qt</li>
+  <li class="technologies" hover="Arduino">Arduino</li>
+  <li class="technologies" hover="Support Vector Machine">SVM</li>
 </ul>
 <h3 class="usage">How to use</h3>
 <p class="usage">In progress.</p>
