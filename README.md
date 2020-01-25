@@ -15,8 +15,8 @@
   <li class="technologies" hover="Arduino">Arduino</li>
   <li class="technologies" hover="Support Vector Machine">SVM</li>
 </ul>
-  <h3 class=thesis>Thesis</h3>
-  <p>Download my thesis here (in polish): <a target="_blank" href="https://raw.githubusercontent.com/WhereIsMyRum/Monitoring-muscle-activity/master/thesis.pdf">click</a></p>
+  <h3 class="thesis">Thesis</h3>
+  <p class="thesis">Download my thesis here (in polish): <a target="_blank" href="https://raw.githubusercontent.com/WhereIsMyRum/Monitoring-muscle-activity/master/thesis.pdf">click</a></p>
 <hr>
 <small class="created">Created: September-December 2017</small>
 </body>
