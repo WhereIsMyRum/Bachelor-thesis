@@ -16,7 +16,7 @@
   <li class="technologies" hover="Support Vector Machine">SVM</li>
 </ul>
 <h3 class="thesis">Praca</h3>
-<p class="thesis">Zobacz moją pracę inżynierską <a target="_blank" href="https://raw.githubusercontent.com/WhereIsMyRum/Monitoring-muscle-activity/master/thesis.pdf">tutaj</a><</p>
+<p class="thesis">Zobacz moją pracę inżynierską <a target="_blank" href="https://raw.githubusercontent.com/WhereIsMyRum/Monitoring-muscle-activity/master/thesis.pdf">tutaj</a></p>
 <hr>
 <small class="created">Data powstania: Wrzesień-Grudzień 2017</small>
 </body>
