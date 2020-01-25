@@ -1,6 +1,6 @@
 <html>
 <body>
-<h1 class="title">Bachelor-thesis</h1>
+<h1 class="title">Monitoring Muscle Activity</h1>
 <h3 class="why">Powód</h3>
 <p class="why">Niniejsza aplikacja powstała w ramach mojej pracy inżynierskiej. Pełny tytuł pracy brzmiał: "System do monitorowania przebiegu ćwiczeń siłowych w oparciu o analizę biopotencjałów". Za samą pracę jak i jej obronę otrzymałem ocenę bardzo dobrą, i dzięki temu, jak również dzięki całokształowi moich osiągnięć podczas studiów, otrzymałem dyplom z wyróznieniem. </p>
 <h3 class="what">Cel</h3>
